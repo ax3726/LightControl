@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/device_list_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200px"
+            android:src="@drawable/success_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60px"
+            android:text="配置完成"
+            android:textColor="@color/colorEAEAEA"
+            android:textSize="34px" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30px"
+            android:text="尽情享受智能灯带带来的生活乐趣吧！"
+            android:textColor="@color/colorEAEAEA"
+            android:textSize="24px" />
+
+        <TextView
+            android:id="@+id/tv_start"
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:layout_marginLeft="80px"
+            android:layout_marginTop="80px"
+            android:layout_marginRight="80px"
+            android:background="@drawable/shape_common_btn"
+            android:gravity="center"
+            android:text="开始使用"
+            android:textColor="@color/colorWhite"
+            android:textSize="30px" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+</layout>

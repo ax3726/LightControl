@@ -6,4 +6,7 @@
     <color name="colorFEFEFF">#FEFEFF</color>
     <color name="color0060FF">#0060FF</color>
     <color name="color182C7D">#182C7D</color>
+    <color name="progress_gray">#636A7B</color>
+    <color name="progress_gray_dark">#FF383838</color>
+    <color name="default_blue_light">#FDB220</color>
 </resources>

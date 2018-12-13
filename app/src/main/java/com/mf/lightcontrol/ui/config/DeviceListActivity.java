@@ -12,6 +12,7 @@ import com.lm.lib_common.base.BasePresenter;
 import com.mf.lightcontrol.R;
 import com.mf.lightcontrol.databinding.ActivityDeviceListBinding;
 import com.mf.lightcontrol.databinding.ItemDeviceListBinding;
+import com.mf.lightcontrol.ui.control.ControlActivity;
 import com.mf.lightcontrol.widget.dialog.ChooseLinkDialog;
 import com.mf.lightcontrol.widget.dialog.EditNameDialog;
 
@@ -37,7 +38,13 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
     protected void initTitleBar() {
         super.initTitleBar();
         mTitleBarLayout.setTitle("HOMEJOY 智能灯带");
-
+        mTitleBarLayout.setRightTxt("下一页");
+        mTitleBarLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ControlActivity.class);
+            }
+        });
     }
 
     @Override
@@ -57,12 +64,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         mDataList.add("");
         mDataList.add("");
         mDataList.add("");
-        mDataList.add("");
-        mDataList.add("");
-        mDataList.add("");
-        mDataList.add("");
-        mDataList.add("");
-        mDataList.add("");
+
     }
 
     @Override

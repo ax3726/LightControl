@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical">
+
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:id="@+id/lly_head"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/colorDefault"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/lly_left"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/id_leftBtnImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/image_back_icon" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="操作"
+            android:textColor="@color/colorWhite"
+            android:textSize="16dp" />
+
+
+        <TextView
+            android:id="@+id/tv_right"
+            android:layout_width="135px"
+            android:layout_height="50px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/shape_common_btn"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="完成"
+            android:textColor="@color/colorWhite"
+            android:textSize="14dp" />
+
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/device_list_bg"
+        android:orientation="vertical">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="41px"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/liuxing_icon"
+                android:drawablePadding="14px"
+                android:gravity="center_horizontal"
+                android:text="流星"
+                android:textColor="@color/colorWhite"
+                android:textSize="24px" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/lvdong_icon"
+                android:drawablePadding="14px"
+                android:gravity="center_horizontal"
+                android:text="律动"
+                android:textColor="@color/colorWhite"
+                android:textSize="24px" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/huxi_icon"
+                android:drawablePadding="14px"
+                android:gravity="center_horizontal"
+                android:text="呼吸"
+                android:textColor="@color/colorWhite"
+                android:textSize="24px" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/zhuguang_icon"
+                android:drawablePadding="14px"
+                android:gravity="center_horizontal"
+                android:text="烛光"
+                android:textColor="@color/colorWhite"
+                android:textSize="24px" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/caihong_icon"
+                android:drawablePadding="14px"
+                android:gravity="center_horizontal"
+                android:text="彩虹"
+                android:textColor="@color/colorWhite"
+                android:textSize="24px" />
+
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="25px">
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:id="@+id/rly_switch"
+                android:layout_width="400px"
+                android:layout_height="400px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50px">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10px"
+                    android:src="@drawable/control_on_bg" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/kuang_icon" />
+
+                <ImageView
+                    android:id="@+id/img_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/switch_on_icon" />
+
+            </com.zhy.autolayout.AutoRelativeLayout>
+
+            <com.mf.lightcontrol.widget.SeekArc
+                android:id="@+id/seekArc"
+                android:layout_width="495px"
+                android:layout_height="495px"
+                android:layout_centerHorizontal="true"
+                android:padding="20dp"
+                app:arcWidth="8dp"
+                app:progress="90"
+                app:progressWidth="8dp"
+                app:rotation="240"
+                app:roundEdges="true"
+                app:startAngle="0"
+                app:sweepAngle="240" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/rly_switch"
+                android:layout_alignBottom="@+id/rly_switch"
+                android:src="@drawable/light_min_icon" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/rly_switch"
+                android:layout_alignBottom="@+id/rly_switch"
+                android:src="@drawable/light_max_icon" />
+
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="92px"
+            android:orientation="horizontal"
+            android:paddingLeft="81px"
+            android:paddingRight="50px">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="走灯速度"
+                android:textColor="@color/colorcccccc"
+                android:textSize="26px" />
+
+            <SeekBar
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="36px"
+                android:layout_weight="1"
+                android:maxHeight="5dp"
+                android:progress="30"
+                android:progressDrawable="@drawable/speed_seekbar"
+                android:thumb="@drawable/seek_icon" />
+
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="73px"
+            android:orientation="horizontal"
+            android:paddingLeft="81px"
+            android:gravity="center_vertical"
+            android:paddingRight="81px">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自动熄灭时间"
+                android:textColor="@color/colorcccccc"
+                android:textSize="26px" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="30px"
+                android:layout_height="58px"
+                android:textColor="@color/colorWhite"
+                android:textSize="24px"
+                android:text="不熄灭"
+                android:gravity="center"
+                android:background="@drawable/shape_common_black" />
+
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120px"
+            android:layout_marginLeft="84px"
+            android:layout_marginTop="67px"
+            android:layout_marginRight="84px">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/effect_on_icon" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/lenth_off_icon" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

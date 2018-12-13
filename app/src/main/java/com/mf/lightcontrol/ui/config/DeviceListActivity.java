@@ -11,6 +11,9 @@ import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
 import com.mf.lightcontrol.R;
 import com.mf.lightcontrol.databinding.ActivityDeviceListBinding;
+import com.mf.lightcontrol.databinding.ItemDeviceListBinding;
+import com.mf.lightcontrol.widget.dialog.ChooseLinkDialog;
+import com.mf.lightcontrol.widget.dialog.EditNameDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,10 +68,23 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-        mAdapter=new CommonAdapter<String>(aty,R.layout.item_device_list,mDataList) {
+        mAdapter = new CommonAdapter<String>(aty, R.layout.item_device_list, mDataList) {
             @Override
-            protected void convert(ViewHolder holder, String s, int position) {
+            protected void convert(ViewHolder holder, String item, int position) {
+                ItemDeviceListBinding binding = holder.getBinding(ItemDeviceListBinding.class);
+                binding.imgEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditNameDialog nameDialog=new EditNameDialog(aty);
+                        nameDialog.setEditNameListener(new EditNameDialog.EditNameListener() {
+                            @Override
+                            public void onName(String name) {
 
+                            }
+                        });
+                        nameDialog.show();
+                    }
+                });
             }
         };
 
@@ -77,5 +93,28 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         mBinding.rcBody.setNestedScrollingEnabled(false);
         mBinding.srlBody.setEnableRefresh(false);
         mBinding.srlBody.setEnableLoadmore(false);
+    }
+
+    @Override
+    protected void initEvent() {
+        super.initEvent();
+        mBinding.imgAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChooseLinkDialog linkDialog = new ChooseLinkDialog(aty);
+                linkDialog.setChooseLinkListener(new ChooseLinkDialog.ChooseLinkListener() {
+                    @Override
+                    public void onSmart() {
+
+                    }
+
+                    @Override
+                    public void onAp() {
+
+                    }
+                });
+                linkDialog.show();
+            }
+        });
     }
 }

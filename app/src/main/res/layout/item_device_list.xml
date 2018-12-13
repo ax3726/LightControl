@@ -1,58 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="28px"
-    android:paddingTop="30px"
-    android:paddingRight="28px"
-    android:paddingBottom="30px">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:id="@+id/img_state"
-        android:layout_width="70px"
-        android:layout_height="70px"
-        android:layout_marginRight="22px"
-        android:src="@drawable/selector_device_state" />
-
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/img_state"
-        android:text="卧室的灯"
-        android:textColor="@color/colorFEFEFF"
-        android:textSize="30px" />
+        android:paddingLeft="28px"
+        android:paddingTop="30px"
+        android:paddingRight="28px"
+        android:paddingBottom="30px">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="36px"
-        android:layout_toRightOf="@+id/tv_name"
-        android:src="@drawable/device_edit_icon" />
+        <ImageView
+            android:id="@+id/img_state"
+            android:layout_width="70px"
+            android:layout_height="70px"
+            android:layout_marginRight="22px"
+            android:src="@drawable/selector_device_state" />
 
-    <ImageView
-        android:id="@+id/img_wifi"
-        android:layout_width="17px"
-        android:layout_height="17px"
-        android:layout_alignBottom="@+id/img_state"
-        android:layout_toRightOf="@+id/img_state"
-        android:src="@drawable/divice_wifi_icon" />
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_state"
+            android:text="卧室的灯"
+            android:textColor="@color/colorFEFEFF"
+            android:textSize="30px" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/img_wifi"
-        android:layout_marginLeft="17px"
-     android:layout_below="@+id/tv_name"
-        android:text="128.11.15.23"
-        android:layout_marginTop="7px"
-        android:textColor="@color/colorEAEAEA"
-        android:textSize="22px" />
+        <ImageView
+            android:id="@+id/img_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="36px"
+            android:layout_toRightOf="@+id/tv_name"
+            android:src="@drawable/device_edit_icon" />
 
-    <ImageView
-        android:layout_width="126px"
-        android:layout_height="63px"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/selector_device_turn" />
 
-</com.zhy.autolayout.AutoRelativeLayout>
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/img_state"
+            android:layout_toRightOf="@+id/img_state"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img_wifi"
+                android:layout_width="17px"
+                android:layout_height="17px"
+                android:layout_gravity="center"
+                android:src="@drawable/divice_wifi_icon" />
+
+            <TextView
+                android:id="@+id/tv_ip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17px"
+                android:text="128.11.15.23"
+                android:textColor="@color/colorEAEAEA"
+                android:textSize="22px" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+
+        <ImageView
+            android:layout_width="126px"
+            android:layout_height="63px"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/selector_device_turn" />
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+</layout>

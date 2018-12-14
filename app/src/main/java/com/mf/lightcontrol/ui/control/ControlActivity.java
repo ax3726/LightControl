@@ -42,7 +42,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             case R.id.img_min:
                 if (mIsSwitch) {
                     mBinding.seekArc.setProgress(0);
-                }
+                } 
                 break;
             case R.id.img_max:
                 if (mIsSwitch) {

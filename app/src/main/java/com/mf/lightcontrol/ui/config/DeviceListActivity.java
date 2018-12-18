@@ -77,7 +77,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                 binding.imgEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EditNameDialog nameDialog=new EditNameDialog(aty);
+                        EditNameDialog nameDialog = new EditNameDialog(aty);
                         nameDialog.setEditNameListener(new EditNameDialog.EditNameListener() {
                             @Override
                             public void onName(String name) {
@@ -107,7 +107,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                 linkDialog.setChooseLinkListener(new ChooseLinkDialog.ChooseLinkListener() {
                     @Override
                     public void onSmart() {
-
+                        startActivity(SmartConfigActivity.class);
                     }
 
                     @Override

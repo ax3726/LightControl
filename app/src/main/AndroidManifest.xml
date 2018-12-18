@@ -28,9 +28,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.control.ControlSuccessActivity" />
-        <activity android:name=".ui.control.ControlActivity">
-
-        </activity>
+        <activity android:name=".ui.control.ControlActivity"></activity>
+        <activity android:name=".ui.config.SmartConfigActivity"></activity>
     </application>
 
 </manifest>

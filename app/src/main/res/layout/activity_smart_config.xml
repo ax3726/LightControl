@@ -53,7 +53,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/shape_common_black"
                 android:gravity="center"
+                android:drawableRight="@drawable/down_icon"
                 android:text="1"
+                android:paddingRight="30px"
                 android:textColor="@color/colorWhite"
                 android:textSize="24px" />
 

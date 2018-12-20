@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="107px"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_yushe"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_time_bg"
+                android:gravity="center"
+                android:text="预设"
+                android:textColor="@color/colorWhite"
+                android:textSize="34px" />
+
+            <TextView
+                android:id="@+id/tv_custom"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_time_bg"
+                android:gravity="center"
+                android:text="自定义时长"
+                android:textColor="@color/colorWhite"
+                android:textSize="34px" />
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoFrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="360px"
+            android:background="#2854D8">
+
+            <com.zhy.autolayout.AutoFrameLayout
+                android:id="@+id/fly_yushe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.mf.lightcontrol.widget.EasyPickerView
+                    android:id="@+id/epv_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    custom:epvMaxShowNum="3"
+                    custom:epvRecycleMode="false"
+                    custom:epvTextColor="@color/colorWhite"
+                    custom:epvTextMaxScale="1.0"
+                    custom:epvTextMinAlpha="1.0"
+                    custom:epvTextPadding="30dp"
+                    custom:epvTextSize="18dp" />
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="51px"
+                    android:layout_marginRight="51px"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.4dp"
+                        android:background="@color/colorWhite" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.4dp"
+                        android:layout_marginTop="120px"
+                        android:background="@color/colorWhite" />
+                </com.zhy.autolayout.AutoLinearLayout>
+
+
+            </com.zhy.autolayout.AutoFrameLayout>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/lly_custom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25px"
+                    android:layout_marginTop="72px"
+                    android:layout_marginRight="25px"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="时"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="26px" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="分"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="26px" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="秒"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="26px" />
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25px"
+                    android:layout_marginTop="23px"
+                    android:layout_marginRight="25px"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="120px"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_common_white"
+                        android:gravity="center"
+                        android:paddingLeft="30px"
+                        android:text="50"
+                        android:textColor="@color/color333333"
+                        android:textSize="34px" />
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="120px"
+                        android:layout_marginLeft="20px"
+                        android:layout_marginRight="20px"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_common_white"
+                        android:gravity="center"
+                        android:paddingLeft="30px"
+                        android:text="50"
+                        android:textColor="@color/color333333"
+                        android:textSize="34px" />
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="120px"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_common_white"
+                        android:gravity="center"
+                        android:paddingLeft="30px"
+                        android:text="50"
+                        android:textColor="@color/color333333"
+                        android:textSize="34px" />
+                </com.zhy.autolayout.AutoLinearLayout>
+            </com.zhy.autolayout.AutoLinearLayout>
+
+        </com.zhy.autolayout.AutoFrameLayout>
+
+
+        <TextView
+            android:id="@+id/tv_ok"
+            android:layout_width="match_parent"
+            android:layout_height="123px"
+            android:background="@color/color182C7D"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/colorWhite"
+            android:textSize="30px" />
+
+
+    </com.zhy.autolayout.AutoLinearLayout>
+</layout>

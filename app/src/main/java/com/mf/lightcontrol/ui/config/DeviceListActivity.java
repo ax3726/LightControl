@@ -1,5 +1,6 @@
 package com.mf.lightcontrol.ui.config;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,13 +39,6 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
     protected void initTitleBar() {
         super.initTitleBar();
         mTitleBarLayout.setTitle("HOMEJOY 智能灯带");
-        mTitleBarLayout.setRightTxt("下一页");
-        mTitleBarLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(ControlActivity.class);
-            }
-        });
     }
 
     @Override
@@ -85,6 +79,20 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                             }
                         });
                         nameDialog.show();
+                    }
+                });
+                binding.rlyItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        showWaitDialog("正在配置中....");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideWaitDialog();
+                                startActivity(ControlActivity.class);
+                            }
+                        }, 2000);
                     }
                 });
             }

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="65px"
+            android:layout_marginTop="43px"
+            android:layout_marginRight="65px">
+
+            <TextView
+                android:id="@+id/tv_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+
+                android:text="传感器编号1"
+                android:textColor="@color/colorWhite"
+                android:textSize="26px" />
+
+            <ImageView
+                android:id="@+id/img_del"
+                android:layout_width="32px"
+                android:layout_height="32px"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/img_del_icon" />
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="65px"
+            android:layout_marginTop="34px"
+            android:layout_marginRight="65px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="坐标点"
+                android:textColor="@color/colorWhite"
+                android:textSize="26px" />
+
+
+            <EditText
+                android:id="@+id/et_num"
+                android:layout_width="115px"
+                android:layout_height="60px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="15px"
+                android:layout_marginRight="15px"
+                android:background="@drawable/shape_common_black"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:inputType="number"
+                android:text="1"
+                android:paddingLeft="30px"
+                android:paddingRight="30px"
+                android:textColor="@color/colorWhite"
+                android:textSize="26px" />
+
+            <ImageView
+                android:id="@+id/img_jian"
+                android:layout_width="80px"
+                android:layout_height="60px"
+                android:layout_toLeftOf="@+id/et_num"
+                android:src="@drawable/img_jian_icon" />
+
+            <ImageView
+                android:id="@+id/img_jia"
+                android:layout_width="80px"
+                android:layout_height="60px"
+                android:layout_toRightOf="@+id/et_num"
+                android:src="@drawable/img_jia_icon" />
+
+            <ImageView
+                android:id="@+id/img_position"
+                android:layout_width="100px"
+                android:layout_height="60px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/img_position_icon" />
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+</layout>

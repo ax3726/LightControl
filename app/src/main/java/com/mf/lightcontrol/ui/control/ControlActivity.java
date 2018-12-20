@@ -117,7 +117,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 }
                 break;
             case R.id.tv_time:
-                TimePopupwindow timePopupwindow=new TimePopupwindow(aty);
+                TimePopupwindow timePopupwindow = new TimePopupwindow(aty);
                 timePopupwindow.showPopupWindow();
                 break;
         }
@@ -146,18 +146,29 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     }
 
     private void updateSwicth(boolean bl) {
-        mBinding.tvLiux.setSelected(bl);
-        mBinding.tvLvdong.setSelected(bl);
-        mBinding.tvHuxi.setSelected(bl);
-        mBinding.tvZhuguang.setSelected(bl);
-        mBinding.tvCaihong.setSelected(bl);
+
+
+        mBinding.tvLvdong.setChecked(bl);
+        mBinding.tvHuxi.setChecked(bl);
+        mBinding.tvZhuguang.setChecked(bl);
+        mBinding.tvCaihong.setChecked(bl);
+        mBinding.tvLiux.setChecked(bl);
+
+        mBinding.tvLvdong.setClickable(bl);
+        mBinding.tvHuxi.setClickable(bl);
+        mBinding.tvZhuguang.setClickable(bl);
+        mBinding.tvCaihong.setClickable(bl);
+        mBinding.tvLiux.setClickable(bl);
+
+
         mBinding.imgSwitch.setSelected(bl);
-        mBinding.imgSwitchBg.setSelected(bl);
+        mBinding.imgSwitchBg.setVisibility(bl ? View.VISIBLE : View.GONE);
+        mBinding.imgSwitchOffBg.setVisibility(!bl ? View.VISIBLE : View.GONE);
         mBinding.seekArc.setEnabled(bl);
         if (!bl) {
             mBinding.seekArc.setProgress(0);
         } else {
-            mBinding.seekArc.setProgress(30);
+            mBinding.seekArc.setProgress(40);
         }
 
     }

@@ -28,12 +28,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.control.ControlSuccessActivity" />
-        <activity android:name=".ui.control.ControlActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            ></activity>
         <activity
-            android:name=".ui.config.SmartConfigActivity"
-          ></activity>
+            android:name=".ui.control.ControlActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".ui.config.SmartConfigActivity" />
     </application>
 
 </manifest>

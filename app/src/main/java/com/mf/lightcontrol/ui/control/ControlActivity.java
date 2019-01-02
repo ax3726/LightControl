@@ -30,6 +30,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     private CommonAdapter<SensorModel> mAdapter;
     private int mPositionMax = 1024;
     private int mPositionPoMax = 1024;
+    private int mPutOutMin = 0;//熄灭时间
 
     @Override
     protected int getLayoutId() {
@@ -67,6 +68,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 updateSwicth(mIsSwitch);
                 break;
             case R.id.img_min:
+
                 if (mIsSwitch) {
                     mBinding.seekArc.setProgress(0);
                 }
@@ -118,6 +120,13 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 break;
             case R.id.tv_time:
                 TimePopupwindow timePopupwindow = new TimePopupwindow(aty);
+                timePopupwindow.setTimeListener(new TimePopupwindow.TimeListener() {
+                    @Override
+                    public void onTime(int min) {
+                        mPutOutMin = min;
+                        mBinding.tvTime.setText(min == 0 ? "不熄灭" : min + "分钟");
+                    }
+                });
                 timePopupwindow.showPopupWindow();
                 break;
         }

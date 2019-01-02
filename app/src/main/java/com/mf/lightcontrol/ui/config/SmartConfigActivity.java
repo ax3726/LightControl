@@ -370,7 +370,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
         protected void onPreExecute() {
             Activity activity = mActivity.get();
             mProgressDialog = new ProgressDialog(activity);
-            mProgressDialog.setMessage("Esptouch is configuring, please wait for a moment...");
+            mProgressDialog.setMessage("正在一键配置WIFI,请稍等...");
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
@@ -430,7 +430,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
                     .create();
             mResultDialog.setCanceledOnTouchOutside(false);
             if (result == null) {
-                mResultDialog.setMessage("Create Esptouch task failed, the esptouch port could be used by other thread");
+                mResultDialog.setMessage("配置失败!");
                 mResultDialog.show();
                 return;
             }
@@ -447,7 +447,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
                 if (firstResult.isSuc()) {
                     StringBuilder sb = new StringBuilder();
                     for (IEsptouchResult resultInList : result) {
-                        sb.append("Esptouch success, bssid = ")
+                        sb.append("配置成功, bssid = ")
                                 .append(resultInList.getBssid())
                                 .append(", InetAddress = ")
                                 .append(resultInList.getInetAddress().getHostAddress())
@@ -464,7 +464,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
                     }
                     mResultDialog.setMessage(sb.toString());
                 } else {
-                    mResultDialog.setMessage("Esptouch fail");
+                    mResultDialog.setMessage("配置失败！");
                 }
 
                 mResultDialog.show();

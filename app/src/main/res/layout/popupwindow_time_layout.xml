@@ -118,14 +118,7 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="26px" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="秒"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="26px" />
+
                 </com.zhy.autolayout.AutoLinearLayout>
 
                 <com.zhy.autolayout.AutoLinearLayout
@@ -137,6 +130,7 @@
                     android:orientation="horizontal">
 
                     <EditText
+                        android:id="@+id/et_shi"
                         android:layout_width="0dp"
                         android:layout_height="120px"
                         android:layout_weight="1"
@@ -144,35 +138,25 @@
                         android:gravity="center"
                         android:inputType="number"
                         android:paddingLeft="30px"
-                        android:text="50"
+                        android:text="1"
                         android:textColor="@color/color333333"
                         android:textSize="34px" />
 
                     <EditText
+                        android:id="@+id/et_fen"
                         android:layout_width="0dp"
                         android:layout_height="120px"
                         android:layout_marginLeft="20px"
-                        android:layout_marginRight="20px"
                         android:layout_weight="1"
                         android:background="@drawable/shape_common_white"
                         android:gravity="center"
                         android:inputType="number"
                         android:paddingLeft="30px"
-                        android:text="50"
+                        android:text="0"
                         android:textColor="@color/color333333"
                         android:textSize="34px" />
 
-                    <EditText
-                        android:layout_width="0dp"
-                        android:layout_height="120px"
-                        android:layout_weight="1"
-                        android:background="@drawable/shape_common_white"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:paddingLeft="30px"
-                        android:text="50"
-                        android:textColor="@color/color333333"
-                        android:textSize="34px" />
+
                 </com.zhy.autolayout.AutoLinearLayout>
             </com.zhy.autolayout.AutoLinearLayout>
 

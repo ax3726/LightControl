@@ -251,12 +251,14 @@
                             android:textSize="26px" />
 
                         <SeekBar
+                            android:id="@+id/sb_speed"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="36px"
                             android:layout_weight="1"
                             android:maxHeight="5dp"
                             android:progress="30"
+
                             android:progressDrawable="@drawable/speed_seekbar"
                             android:thumb="@drawable/seek_icon" />
 

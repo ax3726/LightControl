@@ -13,21 +13,22 @@ import com.mf.lightcontrol.model.common.ReceiverModel;
  */
 public class DemoUtils {
 
-    public static boolean parseDeviceUserData(byte[] data) {
+    public static ReceiverModel parseDeviceUserData(byte[] data) {
 
         ReceiverModel bean = null;
         try {
-            String str = data.toString();
+            String str = new String(data, "UTF-8");
             bean = ParseJsonUtils.getBean(str, ReceiverModel.class);
         } catch (Exception ex) {
 
         }
-        return bean != null;
+        return bean;
 
     }
 
     /**
      * 获取wifiI地址
+     *
      * @param context
      * @return
      */

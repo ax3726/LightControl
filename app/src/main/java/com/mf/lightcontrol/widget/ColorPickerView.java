@@ -135,6 +135,21 @@ public class ColorPickerView extends CircleImageView {
         return true;
     }
 
+
+    public void getColor()
+    {
+        int pixel;
+        int r;
+        int g;
+        int b;
+        pixel = getImagePixel(iconPoint.x, iconPoint.y);
+        r = Color.red(pixel);
+        g = Color.green(pixel);
+        b = Color.blue(pixel);
+        if (mChangedListener != null) {
+            mChangedListener.onColorChanged(r, g, b);
+        }
+    }
     public int getImagePixel(float x, float y) {
 
         Bitmap bitmap = imageBitmap;

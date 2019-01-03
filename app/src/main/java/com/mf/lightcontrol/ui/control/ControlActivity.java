@@ -1,5 +1,8 @@
 package com.mf.lightcontrol.ui.control;
 
+import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,10 +16,14 @@ import com.lm.lib_common.adapters.recyclerview.CommonAdapter;
 import com.lm.lib_common.adapters.recyclerview.base.ViewHolder;
 import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
+import com.lm.lib_common.utils.ParseJsonUtils;
 import com.mf.lightcontrol.R;
+import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivityControlBinding;
 import com.mf.lightcontrol.databinding.ItemLenthLayoutBinding;
 import com.mf.lightcontrol.model.control.SensorModel;
+import com.mf.lightcontrol.model.control.SubmitModel;
+import com.mf.lightcontrol.widget.ColorPickerView;
 import com.mf.lightcontrol.widget.TimePopupwindow;
 import com.mf.lightcontrol.widget.dialog.DelSensorDialog;
 
@@ -30,7 +37,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     private CommonAdapter<SensorModel> mAdapter;
     private int mPositionMax = 1024;
     private int mPositionPoMax = 1024;
+    private int mTotalLength = 1024;//总长度
+    private int mRunlLenth = 1024;//运行的灯珠长度
     private int mPutOutMin = 0;//熄灭时间
+    private String mColor = "";//颜色
 
     @Override
     protected int getLayoutId() {
@@ -58,6 +68,45 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.imgPaoJia.setOnClickListener(this);
         mBinding.imgPaoJian.setOnClickListener(this);
         mBinding.tvTime.setOnClickListener(this);
+        mBinding.imgSwitchBg.setOnColorChangedListenner(new ColorPickerView.OnColorChangedListener() {
+            @Override
+            public void onColorChanged(int r, int g, int b) {
+                mColor = toHexFromColor(r, g, b);
+            }
+
+            @Override
+            public void onMoveColor(int r, int g, int b) {
+
+            }
+        });
+        mBinding.imgSwitchBg.getColor();
+        PhoneClient.getIntance().setUdpListener(new PhoneClient.UdpListener() {
+
+            @Override
+            public void onSetting() {
+             new Handler(new Handler.Callback() {
+                 @Override
+                 public boolean handleMessage(Message msg) {
+                     hideWaitDialog();
+                     showToast("设置成功!");
+                     startActivity(ControlSuccessActivity.class);
+                     return false;
+                 }
+             }).sendEmptyMessage(0);
+            }
+
+            @Override
+            public void onRed() {
+                new Handler(new Handler.Callback() {
+                    @Override
+                    public boolean handleMessage(Message msg) {
+                        hideWaitDialog();
+                        showToast("设置成功!");
+                        return false;
+                    }
+                }).sendEmptyMessage(0);
+            }
+        });
     }
 
     @Override
@@ -82,7 +131,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 finish();
                 break;
             case R.id.tv_right:
-                startActivity(ControlSuccessActivity.class);
+                submit();
                 break;
             case R.id.img_effect://效果配置
                 if (!mBinding.imgEffect.isSelected()) {
@@ -254,5 +303,71 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.llyEffect.setVisibility(bl ? View.VISIBLE : View.GONE);
         mBinding.llyLenth.setVisibility(!bl ? View.VISIBLE : View.GONE);
     }
+
+    private void submit() {
+        if (!mBinding.seekArc.isEnabled()) {
+            return;
+        }
+        int type = 0;
+        if (mBinding.tvLiux.isChecked()) {
+            type = 1;
+        } else if (mBinding.tvLvdong.isChecked()) {
+            type = 2;
+        } else if (mBinding.tvHuxi.isChecked()) {
+            type = 3;
+        } else if (mBinding.tvZhuguang.isChecked()) {
+            type = 4;
+        } else if (mBinding.tvCaihong.isChecked()) {
+            type = 5;
+        }
+        if (type == 0) {
+            showToast("数据有误!");
+            return;
+        }
+        int speed = mBinding.sbSpeed.getProgress();//速度
+        int lum = mBinding.seekArc.getProgress();//亮度
+
+        SubmitModel submitModel = new SubmitModel();
+        submitModel.setCommType(0);
+        submitModel.setProduct("SmartlinearLight");
+        submitModel.setMode(type);
+        submitModel.setColor(mColor);
+        submitModel.setSpeed(speed);
+        submitModel.setLum(lum);
+        submitModel.setAtuoOffTime(mPutOutMin);
+        submitModel.setTotalLenth(mTotalLength);
+        submitModel.setRunlLenth(mRunlLenth);
+        String str = ParseJsonUtils.getjsonStr(submitModel);
+
+        PhoneClient.getIntance().send(str);//发送设置消息
+        showWaitDialog("正在设置中...");
+    }
+
+
+    /**
+     * Color对象转换成字符串
+     *
+     * @return 16进制颜色字符串
+     */
+    private static String toHexFromColor(int red, int green, int blue) {
+        String r, g, b;
+        StringBuilder su = new StringBuilder();
+        r = Integer.toHexString(red);
+        g = Integer.toHexString(green);
+        b = Integer.toHexString(blue);
+        r = r.length() == 1 ? "0" + r : r;
+        g = g.length() == 1 ? "0" + g : g;
+        b = b.length() == 1 ? "0" + b : b;
+        r = r.toUpperCase();
+        g = g.toUpperCase();
+        b = b.toUpperCase();
+        su.append("0xFF");
+        su.append(r);
+        su.append(g);
+        su.append(b);
+        //0xFF0000FF
+        return su.toString();
+    }
+
 
 }

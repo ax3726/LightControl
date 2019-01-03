@@ -8,6 +8,7 @@ import android.util.Log;
 
 
 import com.lm.lib_common.utils.Utils;
+import com.mf.lightcontrol.model.common.ReceiverModel;
 import com.mf.lightcontrol.utils.DemoUtils;
 
 import java.io.IOException;
@@ -130,10 +131,14 @@ public class PhoneClient {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 sock.receive(packet);
                 Log.e("msg", "收到的消息" + new String(packet.getData(), "UTF-8"));
-                if (DemoUtils.parseDeviceUserData(packet.getData())) {
-                    if (mUdpListener != null) {
-                        mUdpListener.onSuccess(packet.getAddress().getHostAddress());
+                ReceiverModel receiverModel = DemoUtils.parseDeviceUserData(packet.getData());
+                if (receiverModel != null && mUdpListener != null) {
+                    if (receiverModel.getCommType() == 0) {//设置参数应答
+                        mUdpListener.onSetting();
+                    } else if (receiverModel.getCommType() == 3) {//红外参数应答
+                        mUdpListener.onRed();
                     }
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -162,6 +167,8 @@ public class PhoneClient {
     }
 
     public interface UdpListener {
-        void onSuccess(String str);
+        void onSetting();
+
+        void onRed();
     }
 }

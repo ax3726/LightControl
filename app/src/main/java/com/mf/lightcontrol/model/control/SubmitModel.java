@@ -6,14 +6,13 @@ package com.mf.lightcontrol.model.control;
  */
 public class SubmitModel {
     private int CommType;
+    private String Product;
     private int Mode;//模式
     private String Color;//颜色
     private int Lum;//亮度
     private int Speed;//速度
-    private String Product;
     private int AtuoOffTime;//自动关闭时间范围
-    private int TotalLenth;//灯珠总个数
-    private int RunlLenth;//运行的灯珠总个数
+
 
     public int getCommType() {
         return CommType;
@@ -69,21 +68,5 @@ public class SubmitModel {
 
     public void setAtuoOffTime(int atuoOffTime) {
         AtuoOffTime = atuoOffTime;
-    }
-
-    public int getTotalLenth() {
-        return TotalLenth;
-    }
-
-    public void setTotalLenth(int totalLenth) {
-        TotalLenth = totalLenth;
-    }
-
-    public int getRunlLenth() {
-        return RunlLenth;
-    }
-
-    public void setRunlLenth(int runlLenth) {
-        RunlLenth = runlLenth;
     }
 }

@@ -1,13 +1,8 @@
 package com.mf.lightcontrol.common;
 
-import android.content.Context;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-
-import com.lm.lib_common.utils.Utils;
 import com.mf.lightcontrol.model.common.ReceiverModel;
 import com.mf.lightcontrol.utils.DemoUtils;
 
@@ -31,7 +26,6 @@ public class PhoneClient {
     private DatagramPacket mSendPack;
     private int part = 1025;
     private UdpListener mUdpListener = null;
-    private String mWifiAddress = "";
 
     public void setUdpListener(UdpListener mUdpListener) {
         this.mUdpListener = mUdpListener;
@@ -55,25 +49,14 @@ public class PhoneClient {
      *
      * @return
      */
-    public synchronized void init(String ip) {
-        if (TextUtils.isEmpty(ip)) {
-            return;
-        }
-        mWifiAddress = ip;
+    public synchronized void init() {
+
         try {
-            sock = new DatagramSocket();
+            sock = new DatagramSocket(1025);
             sock.setBroadcast(true);
 
         } catch (SocketException e) {
             e.printStackTrace();
-        }
-
-        try {
-            // 换成服务器端IP
-            local = InetAddress.getByName(mWifiAddress);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            close();
         }
 
 
@@ -87,6 +70,24 @@ public class PhoneClient {
         isOpen = true;
         receiveThread.start();
 
+    }
+
+    /**
+     * 设置模块的IP地址
+     *
+     * @param ip
+     */
+    public void setSendIP(String ip) {
+        if (TextUtils.isEmpty(ip)) {
+            return;
+        }
+        try {
+            // 换成服务器端IP
+            local = InetAddress.getByName(ip);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            close();
+        }
     }
 
 
@@ -118,6 +119,32 @@ public class PhoneClient {
     }
 
     /**
+     * 发送搜索请求，并能指定想要发现的是支持哪种功能
+     */
+    public void sendAllWei() {
+
+      /*  while (true){
+            if (isOpen) {
+                if (str_data == null) {
+                    return;
+                }
+                mSendPack = new DatagramPacket(str_data.getBytes(), str_data.length(), local,
+                        part);
+
+                try {
+                    sock.send(mSendPack);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    break;
+                }
+            }
+
+        }*/
+
+
+    }
+
+    /**
      * 实现收到server返回设备信息，并解析数据
      */
     private void receive() {
@@ -131,12 +158,11 @@ public class PhoneClient {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 sock.receive(packet);
                 Log.e("msg", "收到的消息" + new String(packet.getData(), "UTF-8"));
+
                 ReceiverModel receiverModel = DemoUtils.parseDeviceUserData(packet.getData());
                 if (receiverModel != null && mUdpListener != null) {
-                    if (receiverModel.getCommType() == 0) {//设置参数应答
+                    if (receiverModel.getRecCommType() == 0) {//设置参数应答
                         mUdpListener.onSetting();
-                    } else if (receiverModel.getCommType() == 3) {//红外参数应答
-                        mUdpListener.onRed();
                     }
 
                 }

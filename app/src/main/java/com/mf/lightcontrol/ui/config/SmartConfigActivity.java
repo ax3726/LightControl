@@ -15,12 +15,11 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -29,7 +28,6 @@ import android.text.method.PasswordTransformationMethod;
 import android.text.method.TransformationMethod;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.espressif.iot.esptouch.EsptouchTask;
 import com.espressif.iot.esptouch.IEsptouchListener;
@@ -41,7 +39,9 @@ import com.espressif.iot.esptouch.util.EspNetUtil;
 import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
 import com.mf.lightcontrol.R;
+import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivitySmartConfigBinding;
+import com.mf.lightcontrol.ui.control.ControlActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -425,11 +425,13 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
         protected void onPostExecute(List<IEsptouchResult> result) {
             SmartConfigActivity activity = mActivity.get();
             mProgressDialog.dismiss();
-            mResultDialog = new AlertDialog.Builder(activity)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .create();
-            mResultDialog.setCanceledOnTouchOutside(false);
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                    .setPositiveButton(android.R.string.ok, null);
+
+
             if (result == null) {
+                mResultDialog = builder.create();
+                mResultDialog.setCanceledOnTouchOutside(false);
                 mResultDialog.setMessage("配置失败!");
                 mResultDialog.show();
                 return;
@@ -462,8 +464,24 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
                                 .append(result.size() - count)
                                 .append(" more result(s) without showing\n");
                     }
+                    if (result != null && result.size() > 0) {
+                        builder.setPositiveButton("前往", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                PhoneClient.getIntance().init();
+                                PhoneClient.getIntance().setSendIP(result.get(0).getInetAddress().getHostAddress());
+                                activity.startActivity(ControlActivity.class);
+
+                            }
+                        });
+                    }
+
+                    mResultDialog=  builder.create();
                     mResultDialog.setMessage(sb.toString());
+
+
                 } else {
+                    mResultDialog=   builder.create();
                     mResultDialog.setMessage("配置失败！");
                 }
 

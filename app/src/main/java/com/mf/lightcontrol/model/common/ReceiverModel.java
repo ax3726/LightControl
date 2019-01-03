@@ -3,28 +3,24 @@ package com.mf.lightcontrol.model.common;
 /**
  * Created by LiMing
  * Date 2018/12/18
+ * 0—接收到手机设置灯带参数
+ * 1--- 接收到搜素信息
+ * 3---接收到设置红外传感器映射参数
+ * 4---接收到设置长度参数
  */
 public class ReceiverModel {
-    private int CommType;
+    private int RecCommType;
     private String Ack;
     private String IPADD;
     private String MACADD;
     private String SN;
 
-    public ReceiverModel() {
-        CommType = 2;
-        Ack = "FIND=1";
-        this.IPADD = "192.168.0.102";
-        this.MACADD = "AA:BB:CC:DD:EE:FF";
-        this.SN = "12345678";
+    public int getRecCommType() {
+        return RecCommType;
     }
 
-    public int getCommType() {
-        return CommType;
-    }
-
-    public void setCommType(int commType) {
-        CommType = commType;
+    public void setRecCommType(int recCommType) {
+        RecCommType = recCommType;
     }
 
     public String getAck() {

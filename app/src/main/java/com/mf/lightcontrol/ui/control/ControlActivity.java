@@ -1,15 +1,13 @@
 package com.mf.lightcontrol.ui.control;
 
-import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
 
 import com.lm.lib_common.adapters.recyclerview.CommonAdapter;
@@ -335,10 +333,9 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         submitModel.setSpeed(speed);
         submitModel.setLum(lum);
         submitModel.setAtuoOffTime(mPutOutMin);
-        submitModel.setTotalLenth(mTotalLength);
-        submitModel.setRunlLenth(mRunlLenth);
-        String str = ParseJsonUtils.getjsonStr(submitModel);
 
+        String str = ParseJsonUtils.getjsonStr(submitModel);
+        Log.e("eee",str);
         PhoneClient.getIntance().send(str);//发送设置消息
         showWaitDialog("正在设置中...");
     }

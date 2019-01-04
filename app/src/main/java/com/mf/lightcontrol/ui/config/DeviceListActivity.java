@@ -10,6 +10,7 @@ import com.lm.lib_common.adapters.recyclerview.base.ViewHolder;
 import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
 import com.mf.lightcontrol.R;
+import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivityDeviceListBinding;
 import com.mf.lightcontrol.databinding.ItemDeviceListBinding;
 import com.mf.lightcontrol.ui.control.ControlActivity;
@@ -58,7 +59,18 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         mDataList.add("");
         mDataList.add("");
         mDataList.add("");
+        PhoneClient.getIntance().init();//初始化UDP通讯
+        PhoneClient.getIntance().setSearchListener(new PhoneClient.SearchListener() {
+            @Override
+            public void onDevice(String ip) {
 
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -84,12 +96,13 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                 binding.rlyItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        PhoneClient.getIntance().setSendIP("192.168.1.103");
                       showWaitDialog("正在配置中....");
                       new Handler().postDelayed(new Runnable() {
                           @Override
                           public void run() {
                               hideWaitDialog();
+
                               startActivity(ControlActivity.class);
                           }
                       },2000);

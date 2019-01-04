@@ -19,6 +19,7 @@ import com.mf.lightcontrol.R;
 import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivityControlBinding;
 import com.mf.lightcontrol.databinding.ItemLenthLayoutBinding;
+import com.mf.lightcontrol.model.control.LenthModel;
 import com.mf.lightcontrol.model.control.SensorModel;
 import com.mf.lightcontrol.model.control.SubmitModel;
 import com.mf.lightcontrol.widget.ColorPickerView;
@@ -66,6 +67,8 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.imgPaoJia.setOnClickListener(this);
         mBinding.imgPaoJian.setOnClickListener(this);
         mBinding.tvTime.setOnClickListener(this);
+        mBinding.imgAllPosition.setOnClickListener(this);
+        mBinding.imgPaoPosition.setOnClickListener(this);
         mBinding.imgSwitchBg.setOnColorChangedListenner(new ColorPickerView.OnColorChangedListener() {
             @Override
             public void onColorChanged(int r, int g, int b) {
@@ -78,33 +81,9 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             }
         });
         mBinding.imgSwitchBg.getColor();
-        PhoneClient.getIntance().setUdpListener(new PhoneClient.UdpListener() {
 
-            @Override
-            public void onSetting() {
-             new Handler(new Handler.Callback() {
-                 @Override
-                 public boolean handleMessage(Message msg) {
-                     hideWaitDialog();
-                     showToast("设置成功!");
-                     startActivity(ControlSuccessActivity.class);
-                     return false;
-                 }
-             }).sendEmptyMessage(0);
-            }
+        initTextSwitch();
 
-            @Override
-            public void onRed() {
-                new Handler(new Handler.Callback() {
-                    @Override
-                    public boolean handleMessage(Message msg) {
-                        hideWaitDialog();
-                        showToast("设置成功!");
-                        return false;
-                    }
-                }).sendEmptyMessage(0);
-            }
-        });
     }
 
     @Override
@@ -131,6 +110,12 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             case R.id.tv_right:
                 submit();
                 break;
+            case R.id.img_all_position:
+                submitLenth();
+                break;
+            case R.id.img_pao_position:
+                submitLenth();
+                break;
             case R.id.img_effect://效果配置
                 if (!mBinding.imgEffect.isSelected()) {
                     setImgState(true);
@@ -146,23 +131,28 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.img_all_jia:
-                mPositionMax++;
-                mBinding.etAll.setText(String.valueOf(mPositionMax));
+                if (mRunlLenth<mPositionMax) {
+                    mTotalLength++;
+                    mBinding.etAll.setText(String.valueOf(mTotalLength));
+                }
                 break;
             case R.id.img_all_jian:
-                if (mPositionMax > 1) {
-                    mPositionMax--;
-                    mBinding.etAll.setText(String.valueOf(mPositionMax));
+                if (mTotalLength > 0) {
+                    mTotalLength--;
+                    mBinding.etAll.setText(String.valueOf(mTotalLength));
                 }
                 break;
             case R.id.img_pao_jia:
-                mPositionPoMax++;
-                mBinding.etPao.setText(String.valueOf(mPositionPoMax));
+                if (mRunlLenth<mPositionPoMax) {
+                    mRunlLenth++;
+                    mBinding.etPao.setText(String.valueOf(mRunlLenth));
+                }
+
                 break;
             case R.id.img_pao_jian:
-                if (mPositionPoMax > 1) {
-                    mPositionPoMax--;
-                    mBinding.etPao.setText(String.valueOf(mPositionPoMax));
+                if (mRunlLenth > 0) {
+                    mRunlLenth--;
+                    mBinding.etPao.setText(String.valueOf(mRunlLenth));
                 }
                 break;
             case R.id.tv_time:
@@ -188,17 +178,58 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s) && Integer.valueOf(s.toString()) > 0) {
-                    mPositionMax = Integer.valueOf(s.toString());
+                if (!TextUtils.isEmpty(s)) {
+                    int num = Integer.valueOf(s.toString());
+                    if (num > mPositionMax) {
+                        mBinding.etAll.setText("" + mPositionMax);
+                        mBinding.etAll.setSelection(4);
+                    } else if (num < 0) {
+                        mBinding.etAll.setText("" + mPositionMax);
+                        mBinding.etAll.setSelection(4);
+                    } else {
+                        mTotalLength = num;
+                    }
+
+
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+        mBinding.etPao.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s)) {
+                    int num = Integer.valueOf(s.toString());
+                    if (num > mPositionPoMax) {
+                        mBinding.etPao.setText("" + mPositionPoMax);
+                        mBinding.etPao.setSelection(4);
+                    } else if (num < 0) {
+                        mBinding.etPao.setText("" + mPositionPoMax);
+                        mBinding.etPao.setSelection(4);
+                    } else {
+                        mRunlLenth = num;
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
+
+
     }
 
     private void updateSwicth(boolean bl) {
@@ -241,6 +272,49 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         updateSwicth(true);
         setImgState(true);
         initAdapter();
+        initUDP();
+    }
+
+    private void initUDP() {
+        PhoneClient.getIntance().setUdpListener(new PhoneClient.UdpListener() {
+
+            @Override
+            public void onSetting() {
+                new Handler(new Handler.Callback() {
+                    @Override
+                    public boolean handleMessage(Message msg) {
+                        hideWaitDialog();
+                        showToast("设置成功!");
+                        startActivity(ControlSuccessActivity.class);
+                        return false;
+                    }
+                }).sendEmptyMessage(0);
+            }
+
+            @Override
+            public void onRed() {
+                new Handler(new Handler.Callback() {
+                    @Override
+                    public boolean handleMessage(Message msg) {
+                        hideWaitDialog();
+                        showToast("设置成功!");
+                        return false;
+                    }
+                }).sendEmptyMessage(0);
+            }
+
+            @Override
+            public void onLenth() {
+                new Handler(new Handler.Callback() {
+                    @Override
+                    public boolean handleMessage(Message msg) {
+                        hideWaitDialog();
+                        showToast("设置成功!");
+                        return false;
+                    }
+                }).sendEmptyMessage(0);
+            }
+        });
     }
 
     private void initAdapter() {
@@ -335,7 +409,17 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         submitModel.setAtuoOffTime(mPutOutMin);
 
         String str = ParseJsonUtils.getjsonStr(submitModel);
-        Log.e("eee",str);
+
+        PhoneClient.getIntance().send(str);//发送设置消息
+        showWaitDialog("正在设置中...");
+    }
+
+    private void submitLenth() {
+        LenthModel lenthModel = new LenthModel();
+        lenthModel.setCommType(4);
+        lenthModel.setTotalLenth(mTotalLength);
+        lenthModel.setRunLenth(mRunlLenth);
+        String str = ParseJsonUtils.getjsonStr(lenthModel);
         PhoneClient.getIntance().send(str);//发送设置消息
         showWaitDialog("正在设置中...");
     }
@@ -358,7 +442,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         r = r.toUpperCase();
         g = g.toUpperCase();
         b = b.toUpperCase();
-        su.append("0xFF");
+        su.append("0x");
         su.append(r);
         su.append(g);
         su.append(b);

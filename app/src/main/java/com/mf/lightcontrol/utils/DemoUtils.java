@@ -6,13 +6,16 @@ import android.net.wifi.WifiManager;
 
 import com.lm.lib_common.utils.ParseJsonUtils;
 import com.mf.lightcontrol.model.common.ReceiverModel;
+import com.mf.lightcontrol.model.common.SendModel;
 
 /**
  * Created by LiMing
  * Date 2019/1/2
  */
 public class DemoUtils {
-
+    public static String packData() {
+        return ParseJsonUtils.getjsonStr(new SendModel(0x1, "FIND=1"));
+    }
     public static ReceiverModel parseDeviceUserData(byte[] data) {
 
         ReceiverModel bean = null;

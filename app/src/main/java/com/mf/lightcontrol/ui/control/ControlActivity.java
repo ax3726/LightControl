@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 
 import com.lm.lib_common.adapters.recyclerview.CommonAdapter;
@@ -20,6 +19,7 @@ import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivityControlBinding;
 import com.mf.lightcontrol.databinding.ItemLenthLayoutBinding;
 import com.mf.lightcontrol.model.control.LenthModel;
+import com.mf.lightcontrol.model.control.RedModel;
 import com.mf.lightcontrol.model.control.SensorModel;
 import com.mf.lightcontrol.model.control.SubmitModel;
 import com.mf.lightcontrol.widget.ColorPickerView;
@@ -274,45 +274,44 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         initAdapter();
         initUDP();
     }
-
+    private Handler mHandler=new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    hideWaitDialog();
+                    showToast("设置成功!");
+                    startActivity(ControlSuccessActivity.class);
+                    finish();
+                    break;
+                case 1://红外
+                    hideWaitDialog();
+                    showToast("设置成功!");
+                    break;
+                case 2://长度
+                    hideWaitDialog();
+                    showToast("设置成功!");
+                    break;
+            }
+            return false;
+        }
+    });
     private void initUDP() {
         PhoneClient.getIntance().setUdpListener(new PhoneClient.UdpListener() {
 
             @Override
             public void onSetting() {
-                new Handler(new Handler.Callback() {
-                    @Override
-                    public boolean handleMessage(Message msg) {
-                        hideWaitDialog();
-                        showToast("设置成功!");
-                        startActivity(ControlSuccessActivity.class);
-                        return false;
-                    }
-                }).sendEmptyMessage(0);
+            mHandler.sendEmptyMessage(0);
             }
 
             @Override
             public void onRed() {
-                new Handler(new Handler.Callback() {
-                    @Override
-                    public boolean handleMessage(Message msg) {
-                        hideWaitDialog();
-                        showToast("设置成功!");
-                        return false;
-                    }
-                }).sendEmptyMessage(0);
+                mHandler.sendEmptyMessage(1);
             }
 
             @Override
             public void onLenth() {
-                new Handler(new Handler.Callback() {
-                    @Override
-                    public boolean handleMessage(Message msg) {
-                        hideWaitDialog();
-                        showToast("设置成功!");
-                        return false;
-                    }
-                }).sendEmptyMessage(0);
+                mHandler.sendEmptyMessage(2);
             }
         });
     }
@@ -331,6 +330,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                         delSensorDialog.setDelSensorListener(new DelSensorDialog.DelSensorListener() {
                             @Override
                             public void onDel() {
+                                submitRed(0,position,item.getPosition());
                                 mDataList.remove(position);
                                 notifyDataSetChanged();
                             }
@@ -360,6 +360,13 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                         notifyDataSetChanged();
                     }
                 });
+                binding.imgPosition.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        submitRed(1,position,item.getPosition());
+                    }
+                });
+
             }
         };
         mAdapter.setEmptyView(R.layout.empty_control_hint_layout);
@@ -420,6 +427,18 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         lenthModel.setTotalLenth(mTotalLength);
         lenthModel.setRunLenth(mRunlLenth);
         String str = ParseJsonUtils.getjsonStr(lenthModel);
+        PhoneClient.getIntance().send(str);//发送设置消息
+        showWaitDialog("正在设置中...");
+    }
+
+    private void submitRed(int type,int position,int size)
+    {
+        RedModel redModel=new RedModel();
+        redModel.setCommType(3);
+        redModel.setSensorID(position);
+        redModel.setSetType(type);
+        redModel.setMappLignt(size);
+        String str = ParseJsonUtils.getjsonStr(redModel);
         PhoneClient.getIntance().send(str);//发送设置消息
         showWaitDialog("正在设置中...");
     }

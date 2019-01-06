@@ -65,7 +65,7 @@
             android:layout_width="126px"
             android:layout_height="63px"
             android:layout_alignParentRight="true"
-            android:src="@drawable/selector_device_turn" />
+            android:src="@drawable/device_turn_on_icon" />
 
     </com.zhy.autolayout.AutoRelativeLayout>
 </layout>

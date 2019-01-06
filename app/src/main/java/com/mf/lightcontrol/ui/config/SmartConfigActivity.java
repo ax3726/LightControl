@@ -39,9 +39,7 @@ import com.espressif.iot.esptouch.util.EspNetUtil;
 import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
 import com.mf.lightcontrol.R;
-import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivitySmartConfigBinding;
-import com.mf.lightcontrol.ui.control.ControlActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -134,7 +132,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
         }
         mTask = new EsptouchAsyncTask4(this);
         mTask.execute(ssid, bs, password, deviceCount, broadcast);
-        setFrameAnim();
+      setFrameAnim();
     }
 
     @Override
@@ -178,7 +176,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
     /**
      * 停止帧动画
      */
-    private void stopFrameAnim() {
+    public void stopFrameAnim() {
         if (animationDrawable != null && animationDrawable.isRunning()) {
             animationDrawable.stop();
             mBinding.imgWifi.setBackgroundResource(R.drawable.config_wifi1_icon);
@@ -425,15 +423,10 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
         protected void onPostExecute(List<IEsptouchResult> result) {
             SmartConfigActivity activity = mActivity.get();
             mProgressDialog.dismiss();
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity)
-                    .setPositiveButton(android.R.string.ok, null);
-
+            activity.stopFrameAnim();
 
             if (result == null) {
-                mResultDialog = builder.create();
-                mResultDialog.setCanceledOnTouchOutside(false);
-                mResultDialog.setMessage("配置失败!");
-                mResultDialog.show();
+                activity.showToast("配置失败！");
                 return;
             }
 
@@ -447,7 +440,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
                 // the task received some results including cancelled while
                 // executing before receiving enough results
                 if (firstResult.isSuc()) {
-                    StringBuilder sb = new StringBuilder();
+                   /* StringBuilder sb = new StringBuilder();
                     for (IEsptouchResult resultInList : result) {
                         sb.append("配置成功, bssid = ")
                                 .append(resultInList.getBssid())
@@ -468,24 +461,36 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
                         builder.setPositiveButton("前往", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                PhoneClient.getIntance().init();
-                                PhoneClient.getIntance().setSendIP(result.get(0).getInetAddress().getHostAddress());
-                                activity.startActivity(ControlActivity.class);
+
+                                activity.finish();
 
                             }
                         });
                     }
 
                     mResultDialog=  builder.create();
-                    mResultDialog.setMessage(sb.toString());
+                    mResultDialog.setMessage(sb.toString());*/
+                    activity.showToast("配置成功!");
 
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            try {
+                                sleep(1500);
+                                activity.finish();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
 
                 } else {
-                    mResultDialog=   builder.create();
-                    mResultDialog.setMessage("配置失败！");
+                /*    mResultDialog=   builder.create();
+                    mResultDialog.setMessage("配置失败！");*/
+                    activity.showToast("配置失败!");
                 }
 
-                mResultDialog.show();
             }
 
             activity.mTask = null;

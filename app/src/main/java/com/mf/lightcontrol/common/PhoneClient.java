@@ -3,7 +3,6 @@ package com.mf.lightcontrol.common;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.lm.lib_common.utils.Utils;
 import com.mf.lightcontrol.model.common.ReceiverModel;
 import com.mf.lightcontrol.utils.DemoUtils;
 
@@ -21,6 +20,7 @@ import java.net.UnknownHostException;
 public class PhoneClient {
 
     private static boolean isOpen = false;
+    private static boolean isSearch = false;
     private Thread sendThread = null, receiveThread = null;
     private DatagramSocket sock = null;
     private InetAddress local = null, mSearchlocal = null;
@@ -76,13 +76,6 @@ public class PhoneClient {
         }
 
 
-        sendThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sendSearch();
-            }
-        });
-
         receiveThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -91,7 +84,7 @@ public class PhoneClient {
         });
 
         isOpen = true;
-        sendThread.start();
+
         receiveThread.start();
 
     }
@@ -147,7 +140,7 @@ public class PhoneClient {
      * 发送搜索请求，
      */
     public void sendSearch() {
-        while (isOpen) {
+        while (isSearch) {
             String messageByte = DemoUtils.packData();
             if (messageByte == null) {
                 return;
@@ -181,7 +174,7 @@ public class PhoneClient {
         if (sock == null || sock.isClosed()) {
             return;
         }
-        byte buf[] = new byte[1024];
+        byte buf[] = new byte[512];
 
         while (isOpen) {
             try {
@@ -213,11 +206,30 @@ public class PhoneClient {
         }
     }
 
+    public synchronized void startSearch() {
+        isSearch = true;
+        sendThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sendSearch();
+            }
+        });
+        sendThread.start();
+    }
+
+    public synchronized void stopSearch() {
+        isSearch = false;
+        if (sendThread != null) {
+            sendThread.interrupt();
+        }
+    }
+
     /**
      * 关闭搜索设备，释放资源等
      */
     public synchronized void close() {
         isOpen = false;
+        isSearch = false;
         if (sendThread != null) {
             sendThread.interrupt();
         }

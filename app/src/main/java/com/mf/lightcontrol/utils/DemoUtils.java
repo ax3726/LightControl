@@ -3,6 +3,7 @@ package com.mf.lightcontrol.utils;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import com.lm.lib_common.utils.ParseJsonUtils;
 import com.mf.lightcontrol.model.common.ReceiverModel;
@@ -17,17 +18,34 @@ public class DemoUtils {
         return ParseJsonUtils.getjsonStr(new SendModel(0x1, "FIND=1"));
     }
     public static ReceiverModel parseDeviceUserData(byte[] data) {
-
         ReceiverModel bean = null;
         try {
-            String str = new String(data, "UTF-8");
-            bean = ParseJsonUtils.getBean(str, ReceiverModel.class);
+            bean = ParseJsonUtils.getBean(bufferToStr(data), ReceiverModel.class);
         } catch (Exception ex) {
 
         }
         return bean;
 
     }
+
+    public static String bufferToStr(byte[] buffer) {
+        try {
+            int length = 0;
+            for (int i = 0; i < buffer.length; ++i) {
+                if (buffer[i] == 0) {
+                    length = i;
+                    break;
+                }
+            }
+            String str = new String(buffer, 0, length, "UTF-8");
+            str = str.substring(0, str.indexOf("}") + 1);
+            Log.e("mssg","截取后的消息"+str);
+            return str;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
 
     /**
      * 获取wifiI地址

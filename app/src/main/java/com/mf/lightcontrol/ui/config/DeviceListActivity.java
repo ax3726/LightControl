@@ -1,8 +1,10 @@
 package com.mf.lightcontrol.ui.config;
 
-import android.os.Handler;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.lm.lib_common.adapters.recyclerview.CommonAdapter;
@@ -13,6 +15,7 @@ import com.mf.lightcontrol.R;
 import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivityDeviceListBinding;
 import com.mf.lightcontrol.databinding.ItemDeviceListBinding;
+import com.mf.lightcontrol.model.control.DeviceModel;
 import com.mf.lightcontrol.ui.control.ControlActivity;
 import com.mf.lightcontrol.widget.dialog.ChooseLinkDialog;
 import com.mf.lightcontrol.widget.dialog.EditNameDialog;
@@ -22,8 +25,8 @@ import java.util.List;
 
 public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDeviceListBinding> {
 
-    private List<String> mDataList = new ArrayList<>();
-    private CommonAdapter<String> mAdapter;
+    private List<DeviceModel> mDataList = new ArrayList<>();
+    private CommonAdapter<DeviceModel> mAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -52,34 +55,67 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
 
     }
 
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            addDevice((String) msg.obj);
+            return false;
+        }
+    });
+
     @Override
     protected void initData() {
         super.initData();
-        mDataList.add("");
-        mDataList.add("");
-        mDataList.add("");
-        mDataList.add("");
+
         PhoneClient.getIntance().init();//初始化UDP通讯
         PhoneClient.getIntance().setSearchListener(new PhoneClient.SearchListener() {
             @Override
             public void onDevice(String ip) {
+                Message message = new Message();
+                message.obj = ip;
+                message.what = 0;
+                mHandler.sendMessage(message);
 
             }
         });
     }
 
+    private void addDevice(String ip) {
+        boolean bl = true;
+        for (DeviceModel model : mDataList) {
+            if (model.getIp().equals(ip)) {
+                bl = false;
+                break;
+            }
+        }
+        if (bl) {
+            mDataList.add(new DeviceModel("", ip));
+            mAdapter.notifyDataSetChanged();
+        }
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        PhoneClient.getIntance().startSearch();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        PhoneClient.getIntance().stopSearch();
     }
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-        mAdapter = new CommonAdapter<String>(aty, R.layout.item_device_list, mDataList) {
+        mAdapter = new CommonAdapter<DeviceModel>(aty, R.layout.item_device_list, mDataList) {
             @Override
-            protected void convert(ViewHolder holder, String item, int position) {
+            protected void convert(ViewHolder holder, DeviceModel item, int position) {
+
                 ItemDeviceListBinding binding = holder.getBinding(ItemDeviceListBinding.class);
+                binding.tvName.setText(TextUtils.isEmpty(item.getName()) ? "未知设备" + (position + 1) : item.getName());
                 binding.imgEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -87,7 +123,8 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                         nameDialog.setEditNameListener(new EditNameDialog.EditNameListener() {
                             @Override
                             public void onName(String name) {
-
+                                mDataList.get(position).setName(name);
+                                notifyDataSetChanged();
                             }
                         });
                         nameDialog.show();
@@ -96,16 +133,9 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                 binding.rlyItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PhoneClient.getIntance().setSendIP("192.168.1.103");
-                      showWaitDialog("正在配置中....");
-                      new Handler().postDelayed(new Runnable() {
-                          @Override
-                          public void run() {
-                              hideWaitDialog();
+                        PhoneClient.getIntance().setSendIP(item.getIp());
+                        startActivity(ControlActivity.class);
 
-                              startActivity(ControlActivity.class);
-                          }
-                      },2000);
                     }
                 });
             }
@@ -116,6 +146,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         mBinding.rcBody.setNestedScrollingEnabled(false);
         mBinding.srlBody.setEnableRefresh(false);
         mBinding.srlBody.setEnableLoadmore(false);
+        mAdapter.setEmptyView(R.layout.empty_control_hint_layout, "正在搜索附件设备...\n您可点击下方按钮添加设备!");
     }
 
     @Override
@@ -140,4 +171,6 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
             }
         });
     }
+
+
 }

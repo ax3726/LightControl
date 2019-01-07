@@ -11,6 +11,8 @@
         android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="300px"
+        android:gravity="center"
+        android:lineSpacingExtra="8px"
         android:text="点击右上角按钮添加传感器！"
         android:textColor="@color/colorWhite"
         android:textSize="24px" />

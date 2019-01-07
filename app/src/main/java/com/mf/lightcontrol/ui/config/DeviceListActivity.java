@@ -11,6 +11,7 @@ import com.lm.lib_common.adapters.recyclerview.CommonAdapter;
 import com.lm.lib_common.adapters.recyclerview.base.ViewHolder;
 import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
+import com.lm.lib_common.utils.AppUtils;
 import com.mf.lightcontrol.R;
 import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivityDeviceListBinding;
@@ -66,7 +67,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
     @Override
     protected void initData() {
         super.initData();
-
+        AppUtils.getInstance().setAppStatus(AppUtils.STATUS_NORMAL);//设置正常状态
         PhoneClient.getIntance().init();//初始化UDP通讯
         PhoneClient.getIntance().setSearchListener(new PhoneClient.SearchListener() {
             @Override
@@ -146,7 +147,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         mBinding.rcBody.setNestedScrollingEnabled(false);
         mBinding.srlBody.setEnableRefresh(false);
         mBinding.srlBody.setEnableLoadmore(false);
-        mAdapter.setEmptyView(R.layout.empty_control_hint_layout, "正在搜索附件设备...\n您可点击下方按钮添加设备!");
+        mAdapter.setEmptyView(R.layout.empty_control_hint_layout, "正在搜索附近的设备...\n您可点击下方按钮添加设备!");
     }
 
     @Override

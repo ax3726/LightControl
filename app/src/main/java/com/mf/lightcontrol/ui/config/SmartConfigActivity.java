@@ -90,6 +90,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
         mBinding.imgWifi.setOnClickListener(this);
         mBinding.imgEye.setOnClickListener(this);
         mBinding.imgDel.setOnClickListener(this);
+        mBinding.tvWifi.setOnClickListener(this);
         mBinding.etPwd.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -159,6 +160,9 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
                 break;
             case R.id.img_del:
                 mBinding.etPwd.setText("");
+                break;
+            case R.id.tv_wifi:
+                startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
                 break;
         }
     }

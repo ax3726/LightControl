@@ -52,9 +52,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
     private static final String TAG = "LiMing";
 
     private EsptouchAsyncTask4 mTask;
-
     private IEsptouchListener myListener = new IEsptouchListener() {
-
         @Override
         public void onEsptouchResultAdded(final IEsptouchResult result) {
             onEsptoucResultAddedPerform(result);

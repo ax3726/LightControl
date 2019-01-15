@@ -3,6 +3,7 @@ package com.mf.lightcontrol.common;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.mf.lightcontrol.model.common.DeviceMessageModel;
 import com.mf.lightcontrol.model.common.ReceiverModel;
 import com.mf.lightcontrol.utils.DemoUtils;
 
@@ -29,6 +30,7 @@ public class PhoneClient {
     private int seq = 0;
     private UdpListener mUdpListener = null;
     private SearchListener mSearchListener = null;
+    private DeviceListener mDeviceListener = null;
     private static int REQUEST_INTERVEL_TIME = 3 * 1000;//5s
 
     public void setUdpListener(UdpListener mUdpListener) {
@@ -37,6 +39,10 @@ public class PhoneClient {
 
     public void setSearchListener(SearchListener mSearchListener) {
         this.mSearchListener = mSearchListener;
+    }
+
+    public void setDeviceListener(DeviceListener mDeviceListener) {
+        this.mDeviceListener = mDeviceListener;
     }
 
     private static PhoneClient mPhoneClient = null;
@@ -182,23 +188,32 @@ public class PhoneClient {
                 sock.receive(packet);
                 Log.e("msg", "收到的消息" + new String(packet.getData(), "UTF-8"));
 
-                ReceiverModel receiverModel = DemoUtils.parseDeviceUserData(packet.getData());
-                if (receiverModel != null) {
-                    if (receiverModel.getRecCommType() == 0) {//设置参数应答
-                        if (mUdpListener != null)
-                            mUdpListener.onSetting();
-                    } else if (receiverModel.getRecCommType() == 1) {//搜索设备应答
-                        if (mSearchListener != null)
-                            mSearchListener.onDevice(packet.getAddress().getHostAddress());
-                    } else if (receiverModel.getRecCommType() == 3) {//设置红外传感器映射参数
-                        if (mUdpListener != null)
-                            mUdpListener.onRed();
-                    } else if (receiverModel.getRecCommType() == 4) {//设置长度参数
-                        if (mUdpListener != null)
-                            mUdpListener.onLenth();
-                    }
 
+                DeviceMessageModel messageModel = DemoUtils.parseDeviceMessgaeData(packet.getData());
+                if (TextUtils.isEmpty(messageModel.getONOFFStatus())) {
+                    ReceiverModel receiverModel = DemoUtils.parseDeviceUserData(packet.getData());
+                    if (receiverModel != null) {
+                        if (receiverModel.getRecCommType() == 0) {//设置参数应答
+                            if (mUdpListener != null)
+                                mUdpListener.onSetting();
+                        } else if (receiverModel.getRecCommType() == 1) {//搜索设备应答
+                            if (mSearchListener != null)
+                                mSearchListener.onDevice(packet.getAddress().getHostAddress(), receiverModel.getProduct());
+                        } else if (receiverModel.getRecCommType() == 3) {//设置红外传感器映射参数
+                            if (mUdpListener != null)
+                                mUdpListener.onRed();
+                        } else if (receiverModel.getRecCommType() == 4) {//设置长度参数
+                            if (mUdpListener != null)
+                                mUdpListener.onLenth();
+                        }
+
+                    }
+                } else {
+                    if (mDeviceListener != null)
+                        mDeviceListener.onDevice(messageModel);
                 }
+
+
             } catch (IOException e) {
                 e.printStackTrace();
                 break;
@@ -253,6 +268,10 @@ public class PhoneClient {
     }
 
     public interface SearchListener {
-        void onDevice(String ip);
+        void onDevice(String ip, String name);
+    }
+
+    public interface DeviceListener {
+        void onDevice(DeviceMessageModel model);
     }
 }

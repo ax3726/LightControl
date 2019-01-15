@@ -6,6 +6,7 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import com.lm.lib_common.utils.ParseJsonUtils;
+import com.mf.lightcontrol.model.common.DeviceMessageModel;
 import com.mf.lightcontrol.model.common.ReceiverModel;
 import com.mf.lightcontrol.model.common.SendModel;
 
@@ -25,8 +26,19 @@ public class DemoUtils {
 
         }
         return bean;
-
     }
+    public static DeviceMessageModel parseDeviceMessgaeData(byte[] data) {
+        DeviceMessageModel bean = null;
+        try {
+            bean = ParseJsonUtils.getBean(bufferToStr(data), DeviceMessageModel.class);
+        } catch (Exception ex) {
+
+        }
+        return bean;
+    }
+
+
+
 
     public static String bufferToStr(byte[] buffer) {
         try {

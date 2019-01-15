@@ -10,10 +10,19 @@ package com.mf.lightcontrol.model.common;
  */
 public class ReceiverModel {
     private int RecCommType;
+    private String Product;
     private String Ack;
     private String IPADD;
     private String MACADD;
     private String SN;
+
+    public String getProduct() {
+        return Product;
+    }
+
+    public void setProduct(String product) {
+        Product = product;
+    }
 
     public int getRecCommType() {
         return RecCommType;

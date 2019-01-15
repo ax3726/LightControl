@@ -8,6 +8,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 
 import com.lm.lib_common.adapters.recyclerview.CommonAdapter;
 import com.lm.lib_common.adapters.recyclerview.base.ViewHolder;
@@ -18,11 +20,14 @@ import com.mf.lightcontrol.R;
 import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivityControlBinding;
 import com.mf.lightcontrol.databinding.ItemLenthLayoutBinding;
+import com.mf.lightcontrol.model.common.DeviceMessageModel;
+import com.mf.lightcontrol.model.control.ControlModel;
 import com.mf.lightcontrol.model.control.LenthModel;
 import com.mf.lightcontrol.model.control.RedModel;
 import com.mf.lightcontrol.model.control.SensorModel;
 import com.mf.lightcontrol.model.control.SubmitModel;
 import com.mf.lightcontrol.widget.ColorPickerView;
+import com.mf.lightcontrol.widget.SeekArc;
 import com.mf.lightcontrol.widget.TimePopupwindow;
 import com.mf.lightcontrol.widget.dialog.DelSensorDialog;
 
@@ -40,7 +45,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     private int mRunlLenth = 1024;//运行的灯珠长度
     private int mPutOutMin = 0;//熄灭时间
     private String mColor = "";//颜色
-
+    private String mName="";//名字
     @Override
     protected int getLayoutId() {
         return R.layout.activity_control;
@@ -73,6 +78,13 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             @Override
             public void onColorChanged(int r, int g, int b) {
                 mColor = toHexFromColor(r, g, b);
+                ControlModel controlModel = new ControlModel();
+                controlModel.setCommType(2);
+                controlModel.setPara("Color");
+                controlModel.setData(mColor);
+                String str = ParseJsonUtils.getjsonStr(controlModel);
+                PhoneClient.getIntance().send(str);//发送设置消息
+
             }
 
             @Override
@@ -83,7 +95,78 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.imgSwitchBg.getColor();
 
         initTextSwitch();
+        mBinding.rgBody.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                ControlModel controlModel = new ControlModel();
+                controlModel.setCommType(2);
+                controlModel.setPara("Mode");
+                switch (checkedId) {
+                    case R.id.tv_liux://流行
+                        controlModel.setData("1");
+                        break;
+                    case R.id.tv_lvdong://律动
+                        controlModel.setData("2");
+                        break;
+                    case R.id.tv_huxi://呼吸
+                        controlModel.setData("3");
+                        break;
+                    case R.id.tv_zhuguang://烛光
+                        controlModel.setData("4");
+                        break;
+                    case R.id.tv_caihong://彩虹
+                        controlModel.setData("5");
+                        break;
+                }
 
+                String str = ParseJsonUtils.getjsonStr(controlModel);
+                PhoneClient.getIntance().send(str);//发送设置消息
+
+
+            }
+        });
+        mBinding.seekArc.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener() {
+            @Override
+            public void onProgressChanged(SeekArc seekArc, int progress, boolean fromUser) {
+                ControlModel controlModel = new ControlModel();
+                controlModel.setCommType(2);
+                controlModel.setPara("Lum");
+                controlModel.setData(progress + "");
+                String str = ParseJsonUtils.getjsonStr(controlModel);
+                PhoneClient.getIntance().send(str);//发送设置消息
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekArc seekArc) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekArc seekArc) {
+
+            }
+        });
+        mBinding.sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                ControlModel controlModel = new ControlModel();
+                controlModel.setCommType(2);
+                controlModel.setPara("Speed");
+                controlModel.setData(progress + "");
+                String str = ParseJsonUtils.getjsonStr(controlModel);
+                PhoneClient.getIntance().send(str);//发送设置消息
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     @Override
@@ -94,7 +177,6 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 updateSwicth(mIsSwitch);
                 break;
             case R.id.img_min:
-
                 if (mIsSwitch) {
                     mBinding.seekArc.setProgress(0);
                 }
@@ -131,7 +213,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.img_all_jia:
-                if (mRunlLenth<mPositionMax) {
+                if (mRunlLenth < mPositionMax) {
                     mTotalLength++;
                     mBinding.etAll.setText(String.valueOf(mTotalLength));
                 }
@@ -143,7 +225,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 }
                 break;
             case R.id.img_pao_jia:
-                if (mRunlLenth<mPositionPoMax) {
+                if (mRunlLenth < mPositionPoMax) {
                     mRunlLenth++;
                     mBinding.etPao.setText(String.valueOf(mRunlLenth));
                 }
@@ -162,6 +244,14 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                     public void onTime(int min) {
                         mPutOutMin = min;
                         mBinding.tvTime.setText(min == 0 ? "不熄灭" : min + "分钟");
+
+                        ControlModel controlModel = new ControlModel();
+                        controlModel.setCommType(2);
+                        controlModel.setPara("AtuoOffTime");
+                        controlModel.setData(mPutOutMin + "");
+                        String str = ParseJsonUtils.getjsonStr(controlModel);
+                        PhoneClient.getIntance().send(str);//发送设置消息
+
                     }
                 });
                 timePopupwindow.showPopupWindow();
@@ -258,11 +348,37 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             mBinding.seekArc.setProgress(40);
         }
 
+        ControlModel controlModel = new ControlModel();
+        controlModel.setCommType(2);
+        controlModel.setPara("ONOFF");
+        controlModel.setData(bl ? "Power" : "Sleep");
+        String str = ParseJsonUtils.getjsonStr(controlModel);
+        PhoneClient.getIntance().send(str);//发送设置消息
+
     }
 
     @Override
     protected void initData() {
         super.initData();
+        DeviceMessageModel model = getIntent().getParcelableExtra("data");
+        mName = getIntent().getStringExtra("name");
+        load(model);
+    }
+
+    private void load(DeviceMessageModel model) {
+        if (model == null) {
+            return;
+        }
+        mIsSwitch = model.getONOFFStatus().equals("Power");
+        updateSwicth(mIsSwitch);
+
+        mBinding.seekArc.setProgress(model.getLum());
+        mBinding.sbSpeed.setProgress(model.getSpeed());
+        mRunlLenth = model.getRunLenth();
+        mTotalLength = model.getTotalLenth();
+
+        mPutOutMin = model.getAtuoOffTime();
+        mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
 
     }
 
@@ -274,7 +390,8 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         initAdapter();
         initUDP();
     }
-    private Handler mHandler=new Handler(new Handler.Callback() {
+
+    private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
@@ -296,12 +413,13 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             return false;
         }
     });
+
     private void initUDP() {
         PhoneClient.getIntance().setUdpListener(new PhoneClient.UdpListener() {
 
             @Override
             public void onSetting() {
-            mHandler.sendEmptyMessage(0);
+                mHandler.sendEmptyMessage(0);
             }
 
             @Override
@@ -330,7 +448,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                         delSensorDialog.setDelSensorListener(new DelSensorDialog.DelSensorListener() {
                             @Override
                             public void onDel() {
-                                submitRed(0,position,item.getPosition());
+                                submitRed("Delete", position, item.getPosition());
                                 mDataList.remove(position);
                                 notifyDataSetChanged();
                             }
@@ -363,7 +481,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 binding.imgPosition.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        submitRed(1,position,item.getPosition());
+                        submitRed("Increase", position, item.getPosition());
                     }
                 });
 
@@ -408,7 +526,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
         SubmitModel submitModel = new SubmitModel();
         submitModel.setCommType(0);
-        submitModel.setProduct("SmartlinearLight");
+        submitModel.setProduct(mName);
         submitModel.setMode(type);
         submitModel.setColor(mColor);
         submitModel.setSpeed(speed);
@@ -431,13 +549,11 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         showWaitDialog("正在设置中...");
     }
 
-    private void submitRed(int type,int position,int size)
-    {
-        RedModel redModel=new RedModel();
+    private void submitRed(String type, int position, int size) {
+        RedModel redModel = new RedModel();
         redModel.setCommType(3);
-        redModel.setSensorID(position);
-        redModel.setSetType(type);
-        redModel.setMappLignt(size);
+        redModel.setIRMapping(new RedModel.IRMappingBean(position,type,size));
+
         String str = ParseJsonUtils.getjsonStr(redModel);
         PhoneClient.getIntance().send(str);//发送设置消息
         showWaitDialog("正在设置中...");

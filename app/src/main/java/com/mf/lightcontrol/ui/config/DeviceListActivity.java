@@ -1,5 +1,6 @@
 package com.mf.lightcontrol.ui.config;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,10 +13,14 @@ import com.lm.lib_common.adapters.recyclerview.base.ViewHolder;
 import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
 import com.lm.lib_common.utils.AppUtils;
+import com.lm.lib_common.utils.ParseJsonUtils;
 import com.mf.lightcontrol.R;
 import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivityDeviceListBinding;
 import com.mf.lightcontrol.databinding.ItemDeviceListBinding;
+import com.mf.lightcontrol.model.common.DeviceMessageModel;
+import com.mf.lightcontrol.model.common.LoadMessageModel;
+import com.mf.lightcontrol.model.control.ControlModel;
 import com.mf.lightcontrol.model.control.DeviceModel;
 import com.mf.lightcontrol.ui.control.ControlActivity;
 import com.mf.lightcontrol.widget.dialog.ChooseLinkDialog;
@@ -59,7 +64,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            addDevice((String) msg.obj);
+            addDevice((DeviceModel) msg.obj);
             return false;
         }
     });
@@ -71,26 +76,28 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         PhoneClient.getIntance().init();//初始化UDP通讯
         PhoneClient.getIntance().setSearchListener(new PhoneClient.SearchListener() {
             @Override
-            public void onDevice(String ip) {
+            public void onDevice(String ip, String name) {
                 Message message = new Message();
-                message.obj = ip;
+                message.obj = new DeviceModel(ip, name);
+
                 message.what = 0;
                 mHandler.sendMessage(message);
-
             }
+
+
         });
     }
 
-    private void addDevice(String ip) {
+    private void addDevice(DeviceModel ip) {
         boolean bl = true;
         for (DeviceModel model : mDataList) {
-            if (model.getIp().equals(ip)) {
+            if (model.getIp().equals(ip.getIp())) {
                 bl = false;
                 break;
             }
         }
         if (bl) {
-            mDataList.add(new DeviceModel("", ip));
+            mDataList.add(ip);
             mAdapter.notifyDataSetChanged();
         }
 
@@ -125,6 +132,12 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                             @Override
                             public void onName(String name) {
                                 mDataList.get(position).setName(name);
+                                ControlModel controlModel = new ControlModel();
+                                controlModel.setCommType(2);
+                                controlModel.setPara("Product");
+                                controlModel.setData(name);
+                                String str = ParseJsonUtils.getjsonStr(controlModel);
+                                PhoneClient.getIntance().send(str);//发送设置消息
                                 notifyDataSetChanged();
                             }
                         });
@@ -135,7 +148,16 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                     @Override
                     public void onClick(View v) {
                         PhoneClient.getIntance().setSendIP(item.getIp());
-                        startActivity(ControlActivity.class);
+                        PhoneClient.getIntance().send(ParseJsonUtils.getjsonStr(new LoadMessageModel()));
+                        PhoneClient.getIntance().setDeviceListener(new PhoneClient.DeviceListener() {
+                            @Override
+                            public void onDevice(DeviceMessageModel model) {
+                                startActivity(new Intent(aty, ControlActivity.class)
+                                                .putExtra("data", model)
+                                                .putExtra("name", item.getName()));
+                            }
+                        });
+                        showWaitDialog("读取设备信息中...");
 
                     }
                 });

@@ -93,6 +93,8 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             }
         });
+
+
         if (TextUtils.isEmpty(mColor)) {
             mBinding.imgSwitchBg.getColor();
         } else {

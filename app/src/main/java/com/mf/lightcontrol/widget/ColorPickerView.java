@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -116,6 +117,7 @@ public class ColorPickerView extends CircleImageView {
                 }
                 if (isMove) {
                     isMove = !isMove;
+                    Log.e("lm", "iconPoint.x" + iconPoint.x + "   iconPoint.y" + iconPoint.y);
                     invalidate();
                 }
                 break;
@@ -166,10 +168,28 @@ public class ColorPickerView extends CircleImageView {
         if (intY >= bitmap.getHeight()) {
             intY = bitmap.getHeight() - 1;
         }
+
+
         int pixel = bitmap.getPixel(intX, intY);
 
         return pixel;
 
+    }
+
+    private boolean convertXY(float xy, float radius) {
+        if (xy <= radius) {
+            if (radius - xy < 60) {
+                //  xy = radius - 120;
+                return true;
+            }
+
+        } else {
+            if (xy - radius < 60) {
+                //    xy = radius + 120;
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -178,18 +198,37 @@ public class ColorPickerView extends CircleImageView {
      * @param color_str
      */
     public void toColorPoint(String color_str) {
+        color_str = color_str.replace("0x", "#");
         int color_old = Color.parseColor(color_str);
         Bitmap bitmap = imageBitmap;
 
+        boolean bl = false;
         for (int i = 0; i < bitmap.getWidth(); i++) {
+            if (bl) {
+                break;
+            }
             for (int j = 0; j < bitmap.getHeight(); j++) {
                 int color = bitmap.getPixel(i, j);
                 // Calculate gray value (RGB -> YUV)
+
+
                 if (color_old == color) {
-                    iconPoint.x = i;
-                    iconPoint.y = j;
-                    invalidate();
-                    break;
+                    Point aPoint = new Point( bitmap.getWidth()/2, bitmap.getHeight()/2);
+                    Point bPoint = new Point( i,  j);
+
+                    double x = Math.pow((aPoint.x - bPoint.x), 2);
+                    double y = Math.pow((aPoint.y - bPoint.y), 2);
+                    double result = Math.sqrt(x + y);
+                    Log.e("lm","result"+result);
+                    int min= (int) (radius/2);
+                    int max= (int) (radius/5*4);
+                    if (result<max&&result>min) {
+                        iconPoint.x = i;
+                        iconPoint.y = j;
+                        invalidate();
+                        bl = true;
+                        break;
+                    }
                 }
             }
         }
@@ -203,7 +242,7 @@ public class ColorPickerView extends CircleImageView {
      */
     private void proofLeft(float x, float y) {
 
-        float h = x - viewRadius; // 取xy点和圆点 的三角形宽
+    /*  float h = x - viewRadius; // 取xy点和圆点 的三角形宽
         float w = y - viewRadius;// 取xy点和圆点 的三角形长
         float h2 = h * h;
         float w2 = w * w;
@@ -213,22 +252,31 @@ public class ColorPickerView extends CircleImageView {
             float maxY = y - viewRadius;
             x = ((radius * maxX) / distance) + viewRadius; // 通过三角形一边平行原理求出x,y
             y = ((radius * maxY) / distance) + viewRadius;
-        }
-       /* float percentWidthSize = AutoUtils.getPercentWidthSize(200);
-        if (h<0) {
-            h=-h;
-        }
-        if (w<0) {
-            w=-w;
-        }
-        if (h<=percentWidthSize||w<=percentWidthSize) {
-            return;
         }*/
-        iconPoint.x = x;
-        iconPoint.y = y;
+        Point aPoint = new Point((int) viewRadius, (int) viewRadius);
+        Point bPoint = new Point((int) x, (int) y);
 
-        isMove = true;
+        double i = Math.pow((aPoint.x - bPoint.x), 2);
+        double j = Math.pow((aPoint.y - bPoint.y), 2);
+        double result = Math.sqrt(i + j);
+
+        // 两点间距离公式
+        Log.e("lm","result"+result);
+        float min=radius/3+20;
+        if (result <= min) {
+
+        } else {
+            iconPoint.x = x;
+            iconPoint.y = y;
+            isMove = true;
+        }
+
+
+
+
+
     }
+
 
     boolean isMove;
 

@@ -78,8 +78,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
             @Override
             public void onDevice(String ip, String name) {
                 Message message = new Message();
-                message.obj = new DeviceModel(ip, name);
-
+                message.obj = new DeviceModel(name, ip);
                 message.what = 0;
                 mHandler.sendMessage(message);
             }
@@ -147,18 +146,17 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                 binding.rlyItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PhoneClient.getIntance().setSendIP(item.getIp());
-                        PhoneClient.getIntance().send(ParseJsonUtils.getjsonStr(new LoadMessageModel()));
+                    PhoneClient.getIntance().send(ParseJsonUtils.getjsonStr(new LoadMessageModel()));
                         PhoneClient.getIntance().setDeviceListener(new PhoneClient.DeviceListener() {
                             @Override
                             public void onDevice(DeviceMessageModel model) {
+                                hideWaitDialog();
                                 startActivity(new Intent(aty, ControlActivity.class)
-                                                .putExtra("data", model)
-                                                .putExtra("name", item.getName()));
+                                        .putExtra("data", model)
+                                        .putExtra("name", item.getName()));
                             }
                         });
                         showWaitDialog("读取设备信息中...");
-
                     }
                 });
             }
@@ -178,7 +176,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         mBinding.imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               ChooseLinkDialog linkDialog = new ChooseLinkDialog(aty);
+                ChooseLinkDialog linkDialog = new ChooseLinkDialog(aty);
                 linkDialog.setChooseLinkListener(new ChooseLinkDialog.ChooseLinkListener() {
                     @Override
                     public void onSmart() {

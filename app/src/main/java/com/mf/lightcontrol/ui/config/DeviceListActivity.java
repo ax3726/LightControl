@@ -178,7 +178,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         mBinding.imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChooseLinkDialog linkDialog = new ChooseLinkDialog(aty);
+               ChooseLinkDialog linkDialog = new ChooseLinkDialog(aty);
                 linkDialog.setChooseLinkListener(new ChooseLinkDialog.ChooseLinkListener() {
                     @Override
                     public void onSmart() {

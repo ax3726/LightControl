@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/ic_loading_bg"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="16.0dip">
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        style="@style/AVLoadingIndicatorView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="visible"
+        app:indicatorColor="#ffffff"
+        app:indicatorName="LineScalePulseOutRapidIndicator" />
+
 
     <ProgressBar
         android:layout_width="30.0dip"
         android:layout_height="30.0dip"
-        android:indeterminateDrawable="@drawable/progress_drawable_white" />
+        android:indeterminateDrawable="@drawable/progress_drawable_white"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/id_tv_loadingmsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="8.0dip"
-        android:textColor="#fff"
-
+        android:textColor="#ffffff"
         android:textSize="16.0dip"
         android:visibility="gone" />
 

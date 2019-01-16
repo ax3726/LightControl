@@ -30,7 +30,7 @@ public class LoadingDialog extends Dialog {
         }
         this.setCancelable(true);
     }
-    private String mMsg="正在加载中...";
+    private String mMsg="正在努力加载...";
 
     public void setMsg(String msg) {
       //  this.mMsg = msg;

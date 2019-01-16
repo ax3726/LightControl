@@ -45,7 +45,8 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     private int mRunlLenth = 1024;//运行的灯珠长度
     private int mPutOutMin = 0;//熄灭时间
     private String mColor = "";//颜色
-    private String mName="";//名字
+    private String mName = "";//名字
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_control;
@@ -92,7 +93,11 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             }
         });
-        mBinding.imgSwitchBg.getColor();
+        if (TextUtils.isEmpty(mColor)) {
+            mBinding.imgSwitchBg.getColor();
+        } else {
+            mBinding.imgSwitchBg.toColorPoint(mColor);
+        }
 
         initTextSwitch();
         mBinding.rgBody.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -552,7 +557,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     private void submitRed(String type, int position, int size) {
         RedModel redModel = new RedModel();
         redModel.setCommType(3);
-        redModel.setIRMapping(new RedModel.IRMappingBean(position,type,size));
+        redModel.setIRMapping(new RedModel.IRMappingBean(position, type, size));
 
         String str = ParseJsonUtils.getjsonStr(redModel);
         PhoneClient.getIntance().send(str);//发送设置消息

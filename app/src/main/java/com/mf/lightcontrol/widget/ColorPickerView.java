@@ -70,7 +70,7 @@ public class ColorPickerView extends CircleImageView {
         radius = imageBitmap.getHeight() / 2;// 图片半径
 
         // // 初始化
-        iconPoint.x = radius/5;
+        iconPoint.x = radius / 5;
         iconPoint.y = radius;
 
     }
@@ -136,8 +136,7 @@ public class ColorPickerView extends CircleImageView {
     }
 
 
-    public void getColor()
-    {
+    public void getColor() {
         int pixel;
         int r;
         int g;
@@ -150,6 +149,7 @@ public class ColorPickerView extends CircleImageView {
             mChangedListener.onColorChanged(r, g, b);
         }
     }
+
     public int getImagePixel(float x, float y) {
 
         Bitmap bitmap = imageBitmap;
@@ -167,9 +167,34 @@ public class ColorPickerView extends CircleImageView {
             intY = bitmap.getHeight() - 1;
         }
         int pixel = bitmap.getPixel(intX, intY);
+
         return pixel;
 
     }
+
+    /**
+     * 定位到指定颜色位置
+     *
+     * @param color_str
+     */
+    public void toColorPoint(String color_str) {
+        int color_old = Color.parseColor(color_str);
+        Bitmap bitmap = imageBitmap;
+
+        for (int i = 0; i < bitmap.getWidth(); i++) {
+            for (int j = 0; j < bitmap.getHeight(); j++) {
+                int color = bitmap.getPixel(i, j);
+                // Calculate gray value (RGB -> YUV)
+                if (color_old == color) {
+                    iconPoint.x = i;
+                    iconPoint.y = j;
+                    invalidate();
+                    break;
+                }
+            }
+        }
+    }
+
 
     /**
      * R = sqrt(x * x + y * y)

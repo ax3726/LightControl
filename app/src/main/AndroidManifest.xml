@@ -35,7 +35,9 @@
         <activity android:name=".ui.control.ControlSuccessActivity" />
         <activity
             android:name=".ui.control.ControlActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" >
+
+        </activity>
         <activity android:name=".ui.config.SmartConfigActivity" />
     </application>
 

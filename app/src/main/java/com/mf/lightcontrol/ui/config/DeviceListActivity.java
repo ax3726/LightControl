@@ -146,17 +146,18 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                 binding.rlyItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    PhoneClient.getIntance().send(ParseJsonUtils.getjsonStr(new LoadMessageModel()));
+                        PhoneClient.getIntance().setSendIP(item.getIp());
+                        PhoneClient.getIntance().send(ParseJsonUtils.getjsonStr(new LoadMessageModel()));
                         PhoneClient.getIntance().setDeviceListener(new PhoneClient.DeviceListener() {
                             @Override
                             public void onDevice(DeviceMessageModel model) {
-                                hideWaitDialog();
+                                //       hideWaitDialog();
                                 startActivity(new Intent(aty, ControlActivity.class)
                                         .putExtra("data", model)
                                         .putExtra("name", item.getName()));
                             }
                         });
-                        showWaitDialog("读取设备信息中...");
+                        // showWaitDialog("读取设备信息中...");
                     }
                 });
             }

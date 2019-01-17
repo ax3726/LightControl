@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -15,6 +16,7 @@ import com.lm.lib_common.adapters.recyclerview.CommonAdapter;
 import com.lm.lib_common.adapters.recyclerview.base.ViewHolder;
 import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
+import com.lm.lib_common.utils.AppUtils;
 import com.lm.lib_common.utils.ParseJsonUtils;
 import com.mf.lightcontrol.R;
 import com.mf.lightcontrol.common.PhoneClient;
@@ -135,12 +137,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.seekArc.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener() {
             @Override
             public void onProgressChanged(SeekArc seekArc, int progress, boolean fromUser) {
-                ControlModel controlModel = new ControlModel();
-                controlModel.setCommType(2);
-                controlModel.setPara("Lum");
-                controlModel.setData(progress + "");
-                String str = ParseJsonUtils.getjsonStr(controlModel);
-                PhoneClient.getIntance().send(str);//发送设置消息
+
             }
 
             @Override
@@ -150,28 +147,32 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             @Override
             public void onStopTrackingTouch(SeekArc seekArc) {
-
+                ControlModel controlModel = new ControlModel();
+                controlModel.setCommType(2);
+                controlModel.setPara("Lum");
+                controlModel.setData(seekArc.getProgress() + "");
+                String str = ParseJsonUtils.getjsonStr(controlModel);
+                PhoneClient.getIntance().send(str);//发送设置消息
             }
         });
         mBinding.sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ControlModel controlModel = new ControlModel();
-                controlModel.setCommType(2);
-                controlModel.setPara("Speed");
-                controlModel.setData(progress + "");
-                String str = ParseJsonUtils.getjsonStr(controlModel);
-                PhoneClient.getIntance().send(str);//发送设置消息
+
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                ControlModel controlModel = new ControlModel();
+                controlModel.setCommType(2);
+                controlModel.setPara("Speed");
+                controlModel.setData(seekBar.getProgress() + "");
+                String str = ParseJsonUtils.getjsonStr(controlModel);
+                PhoneClient.getIntance().send(str);//发送设置消息
             }
         });
     }
@@ -181,7 +182,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         switch (v.getId()) {
             case R.id.img_switch:
                 mIsSwitch = !mIsSwitch;
-                updateSwicth(mIsSwitch);
+                updateSwicth(mIsSwitch, true);
                 break;
             case R.id.img_min:
                 if (mIsSwitch) {
@@ -329,7 +330,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
     }
 
-    private void updateSwicth(boolean bl) {
+    private void updateSwicth(boolean bl, boolean send) {
 
 
         mBinding.tvLvdong.setChecked(bl);
@@ -354,21 +355,24 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         } else {
             mBinding.seekArc.setProgress(40);
         }
-
-        ControlModel controlModel = new ControlModel();
-        controlModel.setCommType(2);
-        controlModel.setPara("ONOFF");
-        controlModel.setData(bl ? "Power" : "Sleep");
-        String str = ParseJsonUtils.getjsonStr(controlModel);
-        PhoneClient.getIntance().send(str);//发送设置消息
-
+        if (send) {
+            ControlModel controlModel = new ControlModel();
+            controlModel.setCommType(2);
+            controlModel.setPara("ONOFF");
+            controlModel.setData(bl ? "Power" : "Sleep");
+            String str = ParseJsonUtils.getjsonStr(controlModel);
+            PhoneClient.getIntance().send(str);//发送设置消息
+        }
     }
 
     @Override
     protected void initData() {
         super.initData();
+
         DeviceMessageModel model = getIntent().getParcelableExtra("data");
         mName = getIntent().getStringExtra("name");
+        updateSwicth(true, false);
+        setImgState(true);
         load(model);
     }
 
@@ -377,7 +381,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             return;
         }
         mIsSwitch = model.getONOFFStatus().equals("Power");
-        updateSwicth(mIsSwitch);
+        updateSwicth(mIsSwitch, false);
 
         mBinding.seekArc.setProgress(model.getLum());
         mBinding.sbSpeed.setProgress(model.getSpeed());
@@ -392,8 +396,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-        updateSwicth(true);
-        setImgState(true);
+
         initAdapter();
         initUDP();
     }

@@ -25,7 +25,7 @@ public class LightApplication extends ThisApplication {
     @Override
     public void restartApp(Context context) {
         Intent intent = new Intent(context, DeviceListActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
         android.os.Process.killProcess(android.os.Process.myPid());
     }

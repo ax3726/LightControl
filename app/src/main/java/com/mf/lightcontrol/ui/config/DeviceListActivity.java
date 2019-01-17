@@ -64,7 +64,15 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            addDevice((DeviceModel) msg.obj);
+            switch (msg.what) {
+                case 1:
+                    hideWaitDialog();
+                    break;
+                case 0:
+                    addDevice((DeviceModel) msg.obj);
+                    break;
+            }
+
             return false;
         }
     });
@@ -151,13 +159,15 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                         PhoneClient.getIntance().setDeviceListener(new PhoneClient.DeviceListener() {
                             @Override
                             public void onDevice(DeviceMessageModel model) {
-                                //       hideWaitDialog();
+                                mHandler.sendEmptyMessage(1);
                                 startActivity(new Intent(aty, ControlActivity.class)
                                         .putExtra("data", model)
                                         .putExtra("name", item.getName()));
                             }
                         });
-                        // showWaitDialog("读取设备信息中...");
+                        showWaitDialog("读取设备信息中...");
+
+
                     }
                 });
             }
@@ -177,6 +187,8 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         mBinding.imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 ChooseLinkDialog linkDialog = new ChooseLinkDialog(aty);
                 linkDialog.setChooseLinkListener(new ChooseLinkDialog.ChooseLinkListener() {
                     @Override

@@ -101,17 +101,24 @@ public class PhoneClient {
      *
      * @param ip
      */
-    public void setSendIP(String ip) {
+    public synchronized void setSendIP(String ip) {
         if (TextUtils.isEmpty(ip)) {
             return;
         }
-        try {
-            // 换成服务器端IP
-            local = InetAddress.getByName(ip);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            close();
-        }
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    // 换成服务器端IP
+                    local = InetAddress.getByName(ip);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                    close();
+                }
+            }
+        }.start();
+
     }
 
 
@@ -148,7 +155,7 @@ public class PhoneClient {
     public void sendSearch() {
         while (isSearch) {
             String messageByte = DemoUtils.packData();
-            if (messageByte == null) {
+            if (sock==null||messageByte == null) {
                 return;
             }
             mSendPack = new DatagramPacket(messageByte.getBytes(), messageByte.length(), mSearchlocal,
@@ -190,7 +197,7 @@ public class PhoneClient {
 
 
                 DeviceMessageModel messageModel = DemoUtils.parseDeviceMessgaeData(packet.getData());
-                if (TextUtils.isEmpty(messageModel.getONOFFStatus())) {
+                if (messageModel==null||TextUtils.isEmpty(messageModel.getONOFFStatus())) {
                     ReceiverModel receiverModel = DemoUtils.parseDeviceUserData(packet.getData());
                     if (receiverModel != null) {
                         if (receiverModel.getRecCommType() == 0) {//设置参数应答

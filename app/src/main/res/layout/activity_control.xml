@@ -52,9 +52,9 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="完成"
-                android:visibility="gone"
                 android:textColor="@color/colorWhite"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:visibility="gone" />
 
 
         </com.zhy.autolayout.AutoRelativeLayout>
@@ -182,8 +182,8 @@
                             android:layout_marginTop="50px">
 
                             <com.zhy.autolayout.AutoFrameLayout
-                                android:layout_width="385px"
-                                android:layout_height="385px"
+                                android:layout_width="375px"
+                                android:layout_height="375px"
                                 android:layout_centerInParent="true">
 
                                 <ImageView
@@ -338,34 +338,42 @@
                             android:textSize="26px" />
 
 
-                        <EditText
-                            android:id="@+id/et_all"
+                        <com.zhy.autolayout.AutoFrameLayout
+                            android:id="@+id/fly_all"
                             android:layout_width="115px"
                             android:layout_height="60px"
                             android:layout_centerHorizontal="true"
                             android:layout_marginLeft="15px"
                             android:layout_marginRight="15px"
-                            android:background="@drawable/shape_common_black"
-                            android:gravity="center"
-                            android:inputType="number"
-                            android:paddingLeft="30px"
-                            android:paddingRight="30px"
-                            android:text="1024"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="26px" />
+                            android:background="@drawable/shape_common_black">
+
+                            <EditText
+                                android:id="@+id/et_all"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:padding="0dp"
+                                android:text="1024"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="26px" />
+
+                        </com.zhy.autolayout.AutoFrameLayout>
+
 
                         <ImageView
                             android:id="@+id/img_all_jian"
                             android:layout_width="80px"
                             android:layout_height="60px"
-                            android:layout_toLeftOf="@+id/et_all"
+                            android:layout_toLeftOf="@+id/fly_all"
                             android:src="@drawable/img_jian_icon" />
 
                         <ImageView
                             android:id="@+id/img_all_jia"
                             android:layout_width="80px"
                             android:layout_height="60px"
-                            android:layout_toRightOf="@+id/et_all"
+                            android:layout_toRightOf="@+id/fly_all"
                             android:src="@drawable/img_jia_icon" />
 
                         <ImageView
@@ -394,35 +402,42 @@
                             android:textColor="@color/colorWhite"
                             android:textSize="26px" />
 
-
-                        <EditText
-                            android:id="@+id/et_pao"
+                        <com.zhy.autolayout.AutoFrameLayout
+                            android:id="@+id/fly_pao"
                             android:layout_width="115px"
                             android:layout_height="60px"
                             android:layout_centerHorizontal="true"
                             android:layout_marginLeft="15px"
                             android:layout_marginRight="15px"
-                            android:background="@drawable/shape_common_black"
-                            android:gravity="center"
-                            android:inputType="number"
-                            android:paddingLeft="30px"
-                            android:paddingRight="30px"
-                            android:text="1024"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="26px" />
+                            android:background="@drawable/shape_common_black">
+
+                            <EditText
+                                android:id="@+id/et_pao"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:padding="0dp"
+                                android:text="1024"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="26px" />
+
+                        </com.zhy.autolayout.AutoFrameLayout>
+
 
                         <ImageView
                             android:id="@+id/img_pao_jian"
                             android:layout_width="80px"
                             android:layout_height="60px"
-                            android:layout_toLeftOf="@+id/et_pao"
+                            android:layout_toLeftOf="@+id/fly_pao"
                             android:src="@drawable/img_jian_icon" />
 
                         <ImageView
                             android:id="@+id/img_pao_jia"
                             android:layout_width="80px"
                             android:layout_height="60px"
-                            android:layout_toRightOf="@+id/et_pao"
+                            android:layout_toRightOf="@+id/fly_pao"
                             android:src="@drawable/img_jia_icon" />
 
                         <ImageView

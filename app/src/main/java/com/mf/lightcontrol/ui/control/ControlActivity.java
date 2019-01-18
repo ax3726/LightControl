@@ -24,6 +24,7 @@ import com.mf.lightcontrol.databinding.ActivityControlBinding;
 import com.mf.lightcontrol.databinding.ItemLenthLayoutBinding;
 import com.mf.lightcontrol.model.common.DeviceMessageModel;
 import com.mf.lightcontrol.model.control.ControlModel;
+import com.mf.lightcontrol.model.control.ControlModel1;
 import com.mf.lightcontrol.model.control.LenthModel;
 import com.mf.lightcontrol.model.control.RedModel;
 import com.mf.lightcontrol.model.control.SensorModel;
@@ -48,6 +49,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     private int mPutOutMin = 0;//熄灭时间
     private String mColor = "";//颜色
     private String mName = "";//名字
+    private int mLum = 0;
+    private int mSpeed = 0;
+    private int mMode = 0;
+    private boolean mIsMode = false;//是否设置模式
 
     @Override
     protected int getLayoutId() {
@@ -107,34 +112,59 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.rgBody.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ControlModel controlModel = new ControlModel();
-                controlModel.setCommType(2);
-                controlModel.setPara("Mode");
+
+                if (!mIsMode) {
+                    ControlModel1 controlModel = new ControlModel1();
+                    controlModel.setCommType(2);
+                    controlModel.setPara("Mode");
+                    switch (checkedId) {
+                        case R.id.tv_liux://流行
+
+                            controlModel.setData(1);
+                            break;
+                        case R.id.tv_lvdong://律动
+                            controlModel.setData(2);
+                            break;
+                        case R.id.tv_huxi://呼吸
+                            controlModel.setData(3);
+                            break;
+                        case R.id.tv_zhuguang://烛光
+                            controlModel.setData(4);
+                            break;
+                        case R.id.tv_caihong://彩虹
+                            controlModel.setData(5);
+                            break;
+                    }
+                    if (controlModel.getData() > 0) {
+                        String str = ParseJsonUtils.getjsonStr(controlModel);
+                        PhoneClient.getIntance().send(str);//发送设置消息
+                    }
+                } else {
+                    mIsMode = false;
+                }
                 switch (checkedId) {
                     case R.id.tv_liux://流行
-                        controlModel.setData("1");
+
+                        mMode = 1;
                         break;
                     case R.id.tv_lvdong://律动
-                        controlModel.setData("2");
+                        mMode = 2;
                         break;
                     case R.id.tv_huxi://呼吸
-                        controlModel.setData("3");
+                        mMode = 3;
                         break;
                     case R.id.tv_zhuguang://烛光
-                        controlModel.setData("4");
+                        mMode = 4;
                         break;
                     case R.id.tv_caihong://彩虹
-                        controlModel.setData("5");
+                        mMode = 5;
                         break;
                 }
-
-                String str = ParseJsonUtils.getjsonStr(controlModel);
-                PhoneClient.getIntance().send(str);//发送设置消息
-
-
             }
         });
-        mBinding.seekArc.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener() {
+        mBinding.seekArc.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener()
+
+        {
             @Override
             public void onProgressChanged(SeekArc seekArc, int progress, boolean fromUser) {
 
@@ -147,15 +177,18 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             @Override
             public void onStopTrackingTouch(SeekArc seekArc) {
-                ControlModel controlModel = new ControlModel();
+                mLum = seekArc.getProgress();
+                ControlModel1 controlModel = new ControlModel1();
                 controlModel.setCommType(2);
                 controlModel.setPara("Lum");
-                controlModel.setData(seekArc.getProgress() + "");
+                controlModel.setData(seekArc.getProgress());
                 String str = ParseJsonUtils.getjsonStr(controlModel);
                 PhoneClient.getIntance().send(str);//发送设置消息
             }
         });
-        mBinding.sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mBinding.sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+
+        {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -167,10 +200,11 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                ControlModel controlModel = new ControlModel();
+                mSpeed = seekBar.getProgress();
+                ControlModel1 controlModel = new ControlModel1();
                 controlModel.setCommType(2);
                 controlModel.setPara("Speed");
-                controlModel.setData(seekBar.getProgress() + "");
+                controlModel.setData(seekBar.getProgress());
                 String str = ParseJsonUtils.getjsonStr(controlModel);
                 PhoneClient.getIntance().send(str);//发送设置消息
             }
@@ -201,10 +235,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 submit();
                 break;
             case R.id.img_all_position:
-                submitLenth();
+                submitLenth(true);
                 break;
             case R.id.img_pao_position:
-                submitLenth();
+                submitLenth(false);
                 break;
             case R.id.img_effect://效果配置
                 if (!mBinding.imgEffect.isSelected()) {
@@ -253,10 +287,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                         mPutOutMin = min;
                         mBinding.tvTime.setText(min == 0 ? "不熄灭" : min + "分钟");
 
-                        ControlModel controlModel = new ControlModel();
+                        ControlModel1 controlModel = new ControlModel1();
                         controlModel.setCommType(2);
                         controlModel.setPara("AtuoOffTime");
-                        controlModel.setData(mPutOutMin + "");
+                        controlModel.setData(mPutOutMin);
                         String str = ParseJsonUtils.getjsonStr(controlModel);
                         PhoneClient.getIntance().send(str);//发送设置消息
 
@@ -332,28 +366,27 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
     private void updateSwicth(boolean bl, boolean send) {
 
+        mIsMode = true;
 
-        mBinding.tvLvdong.setChecked(bl);
-        mBinding.tvHuxi.setChecked(bl);
-        mBinding.tvZhuguang.setChecked(bl);
-        mBinding.tvCaihong.setChecked(bl);
-        mBinding.tvLiux.setChecked(bl);
-
+        setMode(mMode, bl);
         mBinding.tvLvdong.setClickable(bl);
         mBinding.tvHuxi.setClickable(bl);
         mBinding.tvZhuguang.setClickable(bl);
         mBinding.tvCaihong.setClickable(bl);
         mBinding.tvLiux.setClickable(bl);
 
-
         mBinding.imgSwitch.setSelected(bl);
         mBinding.imgSwitchBg.setVisibility(bl ? View.VISIBLE : View.GONE);
         mBinding.imgSwitchOffBg.setVisibility(!bl ? View.VISIBLE : View.GONE);
         mBinding.seekArc.setEnabled(bl);
         if (!bl) {
+            mBinding.tvTime.setText("不熄灭");
+            mBinding.sbSpeed.setProgress(0);
             mBinding.seekArc.setProgress(0);
         } else {
-            mBinding.seekArc.setProgress(40);
+            mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
+            mBinding.sbSpeed.setProgress(mSpeed);
+            mBinding.seekArc.setProgress(mLum);
         }
         if (send) {
             ControlModel controlModel = new ControlModel();
@@ -369,9 +402,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     protected void initData() {
         super.initData();
 
+
         DeviceMessageModel model = getIntent().getParcelableExtra("data");
         mName = getIntent().getStringExtra("name");
-        updateSwicth(true, false);
+
         setImgState(true);
         load(model);
     }
@@ -380,18 +414,54 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         if (model == null) {
             return;
         }
-        mIsSwitch = model.getONOFFStatus().equals("Power");
-        updateSwicth(mIsSwitch, false);
+
+
+        mMode = model.getMode();
+
+        mLum = model.getLum();
+        mSpeed = model.getSpeed();
 
         mBinding.seekArc.setProgress(model.getLum());
         mBinding.sbSpeed.setProgress(model.getSpeed());
+
         mRunlLenth = model.getRunLenth();
         mTotalLength = model.getTotalLenth();
 
+        mBinding.etAll.setText(mTotalLength + "");
+        mBinding.etPao.setText(mRunlLenth + "");
+
         mPutOutMin = model.getAtuoOffTime();
         mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
+        mIsSwitch = model.getONOFFStatus().equals("Power");
+        updateSwicth(mIsSwitch, false);
+    }
+
+    private void setMode(int model, boolean bl) {
+        if (!bl) {
+            mBinding.rgBody.clearCheck();
+        } else {
+            switch (model) {
+                case 1:
+                    mBinding.tvLiux.setChecked(bl);
+                    break;
+                case 2:
+                    mBinding.tvLvdong.setChecked(bl);
+                    break;
+                case 3:
+                    mBinding.tvHuxi.setChecked(bl);
+                    break;
+                case 4:
+                    mBinding.tvZhuguang.setChecked(bl);
+                    break;
+                case 5:
+                    mBinding.tvCaihong.setChecked(bl);
+                    break;
+            }
+        }
+
 
     }
+
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -429,17 +499,17 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             @Override
             public void onSetting() {
-                mHandler.sendEmptyMessage(0);
+                //   mHandler.sendEmptyMessage(0);
             }
 
             @Override
             public void onRed() {
-                mHandler.sendEmptyMessage(1);
+                //   mHandler.sendEmptyMessage(1);
             }
 
             @Override
             public void onLenth() {
-                mHandler.sendEmptyMessage(2);
+                //  mHandler.sendEmptyMessage(2);
             }
         });
     }
@@ -549,24 +619,28 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         showWaitDialog("正在设置中...");
     }
 
-    private void submitLenth() {
-        LenthModel lenthModel = new LenthModel();
-        lenthModel.setCommType(4);
-        lenthModel.setTotalLenth(mTotalLength);
-        lenthModel.setRunLenth(mRunlLenth);
-        String str = ParseJsonUtils.getjsonStr(lenthModel);
+    private void submitLenth(boolean is_add) {
+        ControlModel1 controlModel = new ControlModel1();
+        controlModel.setCommType(2);
+        if (is_add) {
+            controlModel.setPara("TotalLenth");
+            controlModel.setData(mTotalLength);
+        } else {
+            controlModel.setPara("RunlLenth");
+            controlModel.setData(mRunlLenth);
+        }
+        String str = ParseJsonUtils.getjsonStr(controlModel);
         PhoneClient.getIntance().send(str);//发送设置消息
-        showWaitDialog("正在设置中...");
     }
 
     private void submitRed(String type, int position, int size) {
         RedModel redModel = new RedModel();
-        redModel.setCommType(3);
+        redModel.setCommType(2);
         redModel.setIRMapping(new RedModel.IRMappingBean(position, type, size));
 
         String str = ParseJsonUtils.getjsonStr(redModel);
         PhoneClient.getIntance().send(str);//发送设置消息
-        showWaitDialog("正在设置中...");
+        // showWaitDialog("正在设置中...");
     }
 
 

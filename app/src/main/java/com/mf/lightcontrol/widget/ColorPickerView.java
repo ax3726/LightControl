@@ -263,7 +263,7 @@ public class ColorPickerView extends CircleImageView {
         // 两点间距离公式
         Log.e("lm","result"+result);
         float min=radius/3+20;
-        if (result <= min) {
+        if (result <= min||result>=viewRadius-10) {
 
         } else {
             iconPoint.x = x;

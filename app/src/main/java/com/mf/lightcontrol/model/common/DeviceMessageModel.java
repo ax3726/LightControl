@@ -3,35 +3,46 @@ package com.mf.lightcontrol.model.common;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by LiMing
  * Date 2019/1/15
  */
-public class DeviceMessageModel implements Parcelable {
+public class DeviceMessageModel implements Serializable {
+
+    /**
+     * RecCommType : 3
+     * ONOFFStatus : Power
+     * Mode : 4
+     * Color : 16711680
+     * Lum : 50
+     * Speed : 50
+     * AtuoOffTime : 0
+     * TotalLenth : 1024
+     * RunLenth : 1024
+     * IRMapping : [[0,10],[1,20],[3,35],[4,40]]
+     */
+
     private int RecCommType;
-    private int Mode;
     private String ONOFFStatus;
-    private String Color;
+    private int Mode;
+    private int Color;
     private int Lum;
     private int Speed;
     private int AtuoOffTime;
     private int TotalLenth;
     private int RunLenth;
+    private List<List<Integer>> IRMapping;
 
     public int getRecCommType() {
         return RecCommType;
     }
 
-    public void setRecCommType(int recCommType) {
-        RecCommType = recCommType;
-    }
-
-    public int getMode() {
-        return Mode;
-    }
-
-    public void setMode(int mode) {
-        Mode = mode;
+    public void setRecCommType(int RecCommType) {
+        this.RecCommType = RecCommType;
     }
 
     public String getONOFFStatus() {
@@ -42,96 +53,69 @@ public class DeviceMessageModel implements Parcelable {
         this.ONOFFStatus = ONOFFStatus;
     }
 
-    public String getColor() {
+    public int getMode() {
+        return Mode;
+    }
+
+    public void setMode(int Mode) {
+        this.Mode = Mode;
+    }
+
+    public int getColor() {
         return Color;
     }
 
-    public void setColor(String color) {
-        Color = color;
+    public void setColor(int Color) {
+        this.Color = Color;
     }
 
     public int getLum() {
         return Lum;
     }
 
-    public void setLum(int lum) {
-        Lum = lum;
+    public void setLum(int Lum) {
+        this.Lum = Lum;
     }
 
     public int getSpeed() {
         return Speed;
     }
 
-    public void setSpeed(int speed) {
-        Speed = speed;
+    public void setSpeed(int Speed) {
+        this.Speed = Speed;
     }
 
     public int getAtuoOffTime() {
         return AtuoOffTime;
     }
 
-    public void setAtuoOffTime(int atuoOffTime) {
-        AtuoOffTime = atuoOffTime;
+    public void setAtuoOffTime(int AtuoOffTime) {
+        this.AtuoOffTime = AtuoOffTime;
     }
 
     public int getTotalLenth() {
         return TotalLenth;
     }
 
-    public void setTotalLenth(int totalLenth) {
-        TotalLenth = totalLenth;
+    public void setTotalLenth(int TotalLenth) {
+        this.TotalLenth = TotalLenth;
     }
 
     public int getRunLenth() {
         return RunLenth;
     }
 
-    public void setRunLenth(int runLenth) {
-        RunLenth = runLenth;
+    public void setRunLenth(int RunLenth) {
+        this.RunLenth = RunLenth;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public List<List<Integer>> getIRMapping() {
+        return IRMapping;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.RecCommType);
-        dest.writeInt(this.Mode);
-        dest.writeString(this.ONOFFStatus);
-        dest.writeString(this.Color);
-        dest.writeInt(this.Lum);
-        dest.writeInt(this.Speed);
-        dest.writeInt(this.AtuoOffTime);
-        dest.writeInt(this.TotalLenth);
-        dest.writeInt(this.RunLenth);
+    public void setIRMapping(List<List<Integer>> IRMapping) {
+        this.IRMapping = IRMapping;
     }
 
-    public DeviceMessageModel() {
-    }
 
-    protected DeviceMessageModel(Parcel in) {
-        this.RecCommType = in.readInt();
-        this.Mode = in.readInt();
-        this.ONOFFStatus = in.readString();
-        this.Color = in.readString();
-        this.Lum = in.readInt();
-        this.Speed = in.readInt();
-        this.AtuoOffTime = in.readInt();
-        this.TotalLenth = in.readInt();
-        this.RunLenth = in.readInt();
-    }
-
-    public static final Parcelable.Creator<DeviceMessageModel> CREATOR = new Parcelable.Creator<DeviceMessageModel>() {
-        @Override
-        public DeviceMessageModel createFromParcel(Parcel source) {
-            return new DeviceMessageModel(source);
-        }
-
-        @Override
-        public DeviceMessageModel[] newArray(int size) {
-            return new DeviceMessageModel[size];
-        }
-    };
 }

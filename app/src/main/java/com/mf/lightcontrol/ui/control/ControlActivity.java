@@ -251,7 +251,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 }
                 break;
             case R.id.tv_add_item:
-                mDataList.add(new SensorModel());
+                mDataList.add(new SensorModel(mDataList.size()));
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.img_all_jia:
@@ -403,7 +403,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         super.initData();
 
 
-        DeviceMessageModel model = getIntent().getParcelableExtra("data");
+        DeviceMessageModel model = (DeviceMessageModel) getIntent().getSerializableExtra("data");
         mName = getIntent().getStringExtra("name");
 
         setImgState(true);
@@ -430,10 +430,22 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.etAll.setText(mTotalLength + "");
         mBinding.etPao.setText(mRunlLenth + "");
 
+
         mPutOutMin = model.getAtuoOffTime();
         mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
         mIsSwitch = model.getONOFFStatus().equals("Power");
         updateSwicth(mIsSwitch, false);
+
+        List<List<Integer>> irMapping = model.getIRMapping();
+        if (irMapping!=null) {
+            for (List<Integer> item : irMapping) {
+                if (item != null && item.size() > 1) {
+                    mDataList.add(new SensorModel(item.get(1), item.get(0)));
+                }
+            }
+            mAdapter.notifyDataSetChanged();
+        }
+
     }
 
     private void setMode(int model, boolean bl) {
@@ -519,7 +531,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             @Override
             protected void convert(ViewHolder holder, SensorModel item, int position) {
                 ItemLenthLayoutBinding binding = holder.getBinding(ItemLenthLayoutBinding.class);
-                binding.tvNum.setText("传感器编号" + (position + 1));
+                binding.tvNum.setText("传感器编号" + item.getId());
                 binding.etNum.setText(String.valueOf(item.getPosition()));
                 binding.imgDel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -528,7 +540,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                         delSensorDialog.setDelSensorListener(new DelSensorDialog.DelSensorListener() {
                             @Override
                             public void onDel() {
-                                submitRed("Delete", position, item.getPosition());
+                                submitRed("Delete", item.getId(), item.getPosition());
                                 mDataList.remove(position);
                                 notifyDataSetChanged();
                             }
@@ -561,7 +573,38 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 binding.imgPosition.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        submitRed("Increase", position, item.getPosition());
+                        submitRed("Increase", item.getId(), item.getPosition());
+                    }
+                });
+
+                binding.etNum.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (!TextUtils.isEmpty(s)) {
+                            int num = Integer.valueOf(s.toString());
+                            if (num > mPositionPoMax) {
+                                binding.etNum.setText("" + mPositionPoMax);
+                                binding.etNum.setSelection(4);
+                            } else if (num < 0) {
+                                binding.etNum.setText("" + mPositionPoMax);
+                                binding.etNum.setSelection(4);
+                            } else {
+                                mDataList.get(position).setPosition(num);
+                                notifyDataSetChanged();
+                            }
+
+
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
                     }
                 });
 

@@ -73,6 +73,9 @@ public class ChooseLinkDialog extends Dialog {
 
                 mBinding.imgSmart.setSelected(false);
                 mBinding.tvSmart.setSelected(false);
+                if (mChooseLinkListener != null) {
+                    mChooseLinkListener.onApSelect();
+                }
             }
         });
 
@@ -96,5 +99,7 @@ public class ChooseLinkDialog extends Dialog {
         void onSmart();
 
         void onAp();
+
+        void onApSelect();
     }
 }

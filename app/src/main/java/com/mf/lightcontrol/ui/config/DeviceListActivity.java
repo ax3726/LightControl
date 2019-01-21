@@ -200,6 +200,12 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                     public void onAp() {
 
                     }
+
+                    @Override
+                    public void onApSelect() {
+                        mDataList.clear();
+                        mAdapter.notifyDataSetChanged();
+                    }
                 });
                 linkDialog.show();
             }

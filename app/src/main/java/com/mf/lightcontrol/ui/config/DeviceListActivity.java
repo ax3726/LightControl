@@ -144,6 +144,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                                 controlModel.setPara("Product");
                                 controlModel.setData(name);
                                 String str = ParseJsonUtils.getjsonStr(controlModel);
+                                PhoneClient.getIntance().setSendIP(item.getIp());
                                 PhoneClient.getIntance().send(str);//发送设置消息
                                 notifyDataSetChanged();
                             }

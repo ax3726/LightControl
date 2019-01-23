@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -17,7 +15,6 @@ import com.lm.lib_common.adapters.recyclerview.CommonAdapter;
 import com.lm.lib_common.adapters.recyclerview.base.ViewHolder;
 import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
-import com.lm.lib_common.utils.AppUtils;
 import com.lm.lib_common.utils.ParseJsonUtils;
 import com.mf.lightcontrol.R;
 import com.mf.lightcontrol.common.PhoneClient;
@@ -26,7 +23,6 @@ import com.mf.lightcontrol.databinding.ItemLenthLayoutBinding;
 import com.mf.lightcontrol.model.common.DeviceMessageModel;
 import com.mf.lightcontrol.model.control.ControlModel;
 import com.mf.lightcontrol.model.control.ControlModel1;
-import com.mf.lightcontrol.model.control.LenthModel;
 import com.mf.lightcontrol.model.control.RedModel;
 import com.mf.lightcontrol.model.control.SensorModel;
 import com.mf.lightcontrol.model.control.SubmitModel;
@@ -445,7 +441,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                     mDataList.add(new SensorModel(item.get(1), item.get(0)));
                 }
             }
-            mAdapter.notifyDataSetChanged();
+            if (mAdapter!=null) {
+                mAdapter.notifyDataSetChanged();
+            }
+
         }
 
     }

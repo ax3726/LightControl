@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -29,6 +30,7 @@ import com.mf.lightcontrol.model.control.LenthModel;
 import com.mf.lightcontrol.model.control.RedModel;
 import com.mf.lightcontrol.model.control.SensorModel;
 import com.mf.lightcontrol.model.control.SubmitModel;
+import com.mf.lightcontrol.utils.SoftKeyBoardListener;
 import com.mf.lightcontrol.widget.ColorPickerView;
 import com.mf.lightcontrol.widget.SeekArc;
 import com.mf.lightcontrol.widget.TimePopupwindow;
@@ -103,7 +105,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
 
         if (TextUtils.isEmpty(mColor)) {
-            mBinding.imgSwitchBg.getColor();
+            //  mBinding.imgSwitchBg.getColor();
         } else {
             mBinding.imgSwitchBg.toColorPoint(mColor);
         }
@@ -437,7 +439,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         updateSwicth(mIsSwitch, false);
 
         List<List<Integer>> irMapping = model.getIRMapping();
-        if (irMapping!=null) {
+        if (irMapping != null) {
             for (List<Integer> item : irMapping) {
                 if (item != null && item.size() > 1) {
                     mDataList.add(new SensorModel(item.get(1), item.get(0)));
@@ -531,6 +533,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             @Override
             protected void convert(ViewHolder holder, SensorModel item, int position) {
                 ItemLenthLayoutBinding binding = holder.getBinding(ItemLenthLayoutBinding.class);
+                if (binding.etNum.getTag() != null) {
+                    TextWatcher txtW = (TextWatcher) binding.etNum.getTag();
+                    binding.etNum.removeTextChangedListener(txtW);
+                }
                 binding.tvNum.setText("传感器编号" + item.getId());
                 binding.etNum.setText(String.valueOf(item.getPosition()));
                 binding.imgDel.setOnClickListener(new View.OnClickListener() {
@@ -576,8 +582,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                         submitRed("Increase", item.getId(), item.getPosition());
                     }
                 });
-
-                binding.etNum.addTextChangedListener(new TextWatcher() {
+                TextWatcher textWatcher = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -595,10 +600,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                                 binding.etNum.setSelection(4);
                             } else {
                                 mDataList.get(position).setPosition(num);
-                                notifyDataSetChanged();
                             }
-
-
                         }
                     }
 
@@ -606,8 +608,9 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                     public void afterTextChanged(Editable s) {
 
                     }
-                });
-
+                };
+                binding.etNum.addTextChangedListener(textWatcher);
+                binding.etNum.setTag(textWatcher);
             }
         };
         mAdapter.setEmptyView(R.layout.empty_control_hint_layout);
@@ -615,6 +618,20 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.rcBody.setAdapter(mAdapter);
         mBinding.srlBody.setEnableRefresh(false);
         mBinding.srlBody.setEnableLoadmore(false);
+        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                if (mAdapter!=null) {
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
     }
 
     private void setImgState(boolean bl) {

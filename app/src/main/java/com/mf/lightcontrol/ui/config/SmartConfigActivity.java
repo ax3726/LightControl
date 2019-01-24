@@ -39,7 +39,10 @@ import com.espressif.iot.esptouch.util.EspNetUtil;
 import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
 import com.mf.lightcontrol.R;
+import com.mf.lightcontrol.common.ClearEventModel;
 import com.mf.lightcontrol.databinding.ActivitySmartConfigBinding;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -131,7 +134,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
         }
         mTask = new EsptouchAsyncTask4(this);
         mTask.execute(ssid, bs, password, deviceCount, broadcast);
-      setFrameAnim();
+        setFrameAnim();
     }
 
     @Override
@@ -473,7 +476,7 @@ public class SmartConfigActivity extends BaseActivity<BasePresenter, ActivitySma
                     mResultDialog=  builder.create();
                     mResultDialog.setMessage(sb.toString());*/
                     activity.showToast("配置成功!");
-
+                    EventBus.getDefault().post(new ClearEventModel());
                     new Thread() {
                         @Override
                         public void run() {

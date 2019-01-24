@@ -15,6 +15,7 @@ import com.lm.lib_common.base.BasePresenter;
 import com.lm.lib_common.utils.AppUtils;
 import com.lm.lib_common.utils.ParseJsonUtils;
 import com.mf.lightcontrol.R;
+import com.mf.lightcontrol.common.ClearEventModel;
 import com.mf.lightcontrol.common.PhoneClient;
 import com.mf.lightcontrol.databinding.ActivityDeviceListBinding;
 import com.mf.lightcontrol.databinding.ItemDeviceListBinding;
@@ -25,6 +26,10 @@ import com.mf.lightcontrol.model.control.DeviceModel;
 import com.mf.lightcontrol.ui.control.ControlActivity;
 import com.mf.lightcontrol.widget.dialog.ChooseLinkDialog;
 import com.mf.lightcontrol.widget.dialog.EditNameDialog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +85,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
     @Override
     protected void initData() {
         super.initData();
+        EventBus.getDefault().register(this);
         AppUtils.getInstance().setAppStatus(AppUtils.STATUS_NORMAL);//设置正常状态
         PhoneClient.getIntance().init();//初始化UDP通讯
         PhoneClient.getIntance().setSearchListener(new PhoneClient.SearchListener() {
@@ -213,5 +219,21 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         });
     }
 
+    /**
+     * 微信支付结果
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void clearData(ClearEventModel event) {
 
+        mDataList.clear();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

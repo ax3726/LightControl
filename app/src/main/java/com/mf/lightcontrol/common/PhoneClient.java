@@ -8,6 +8,7 @@ import com.mf.lightcontrol.model.common.ReceiverModel;
 import com.mf.lightcontrol.utils.DemoUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -133,8 +134,13 @@ public class PhoneClient {
                     if (str_data == null) {
                         return;
                     }
-                    mSendPack = new DatagramPacket(str_data.getBytes(), str_data.length(), local,
-                            part);
+                    try {
+                        byte[] data = str_data.getBytes("UTF-8");
+                        mSendPack = new DatagramPacket(data, data.length, local,
+                                part);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                     Log.e("msg", "发送的消息" + str_data);
                     try {
                         sock.send(mSendPack);

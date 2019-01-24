@@ -224,7 +224,6 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void clearData(ClearEventModel event) {
-
         mDataList.clear();
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();

@@ -1,5 +1,7 @@
 package com.mf.lightcontrol.ui.control;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,7 +31,6 @@ import com.mf.lightcontrol.model.control.SubmitModel;
 import com.mf.lightcontrol.utils.SoftKeyBoardListener;
 import com.mf.lightcontrol.widget.ColorPickerView;
 import com.mf.lightcontrol.widget.SeekArc;
-import com.mf.lightcontrol.widget.TimePopupwindow;
 import com.mf.lightcontrol.widget.dialog.DelSensorDialog;
 
 import java.util.ArrayList;
@@ -40,15 +41,19 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     private boolean mIsSwitch = true;
     private List<SensorModel> mDataList = new ArrayList<>();
     private CommonAdapter<SensorModel> mAdapter;
-    private int mPositionMax = 1024;
-    private int mPositionPoMax = 1024;
+
+    private int mTransAdvanceShow = 0;//横梯的提前显示步数
+    private int mTransAdvanceShowMax = 1024;//横梯的提前显示步数最大值
+    private int mDetecStopTime = 0;//感应停止时间
     private int mTotalLength = 1024;//总长度
-    private int mRunlLenth = 1024;//运行的灯珠长度
-    private int mPutOutMin = 0;//熄灭时间
+    //private int mPutOutMin = 0;//熄灭时间
     private String mColor = "";//颜色
     private String mName = "";//名字
+    private String mSignal = "";//灯带的控制信号 （取值“RGB”、“RBG”、“GRB”、“ GBR”、“ BRG”、“ BGR”）
+    private String mTransDirDetecColor = "";//横梯的感应颜色种类  （取值“SolidColor”、” Colours”）
     private int mLum = 0;
-    private int mSpeed = 0;
+    private int mSpeed = 0;//速度
+    private int mRunLenthPram = 0;//长度
     private int mMode = 0;
     private boolean mIsMode = false;//是否设置模式
 
@@ -73,13 +78,16 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.imgLenth.setOnClickListener(this);
         mBinding.tvRight.setOnClickListener(this);
         mBinding.tvAddItem.setOnClickListener(this);
-        mBinding.imgAllJia.setOnClickListener(this);
-        mBinding.imgAllJian.setOnClickListener(this);
-        mBinding.imgPaoJia.setOnClickListener(this);
-        mBinding.imgPaoJian.setOnClickListener(this);
-        mBinding.tvTime.setOnClickListener(this);
-        mBinding.imgAllPosition.setOnClickListener(this);
-        mBinding.imgPaoPosition.setOnClickListener(this);
+        mBinding.imgTiJia.setOnClickListener(this);
+        mBinding.imgTiJian.setOnClickListener(this);
+        mBinding.imgGanJia.setOnClickListener(this);
+        mBinding.imgGanJian.setOnClickListener(this);
+        mBinding.imgTiPosition.setOnClickListener(this);
+        mBinding.imgGanPosition.setOnClickListener(this);
+        mBinding.imgDengXinPosition.setOnClickListener(this);
+        mBinding.imgGanColorPosition.setOnClickListener(this);
+        mBinding.tvDengXin.setOnClickListener(this);
+        mBinding.tvGanColor.setOnClickListener(this);
         mBinding.imgSwitchBg.setOnColorChangedListenner(new ColorPickerView.OnColorChangedListener() {
             @Override
             public void onColorChanged(int r, int g, int b) {
@@ -126,10 +134,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                         case R.id.tv_huxi://呼吸
                             controlModel.setData(3);
                             break;
-                        case R.id.tv_zhuguang://烛光
+                        case R.id.tv_caihong://彩虹
                             controlModel.setData(4);
                             break;
-                        case R.id.tv_caihong://彩虹
+                        case R.id.tv_quanguan://全关
                             controlModel.setData(5);
                             break;
                     }
@@ -151,18 +159,17 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                     case R.id.tv_huxi://呼吸
                         mMode = 3;
                         break;
-                    case R.id.tv_zhuguang://烛光
+                    case R.id.tv_caihong://彩虹
                         mMode = 4;
                         break;
-                    case R.id.tv_caihong://彩虹
+                    case R.id.tv_quanguan://全关
                         mMode = 5;
                         break;
+
                 }
             }
         });
-        mBinding.seekArc.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener()
-
-        {
+        mBinding.seekArc.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener() {
             @Override
             public void onProgressChanged(SeekArc seekArc, int progress, boolean fromUser) {
 
@@ -184,9 +191,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 PhoneClient.getIntance().send(str);//发送设置消息
             }
         });
-        mBinding.sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-
-        {
+        mBinding.sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -207,6 +212,28 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 PhoneClient.getIntance().send(str);//发送设置消息
             }
         });
+        mBinding.sbLenth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mRunLenthPram = seekBar.getProgress();
+                ControlModel1 controlModel = new ControlModel1();
+                controlModel.setCommType(2);
+                controlModel.setPara("RunLenth");
+                controlModel.setData(seekBar.getProgress());
+                String str = ParseJsonUtils.getjsonStr(controlModel);
+                PhoneClient.getIntance().send(str);//发送设置消息
+            }
+        });
+
     }
 
     @Override
@@ -232,10 +259,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             case R.id.tv_right:
                 submit();
                 break;
-            case R.id.img_all_position:
+            case R.id.img_ti_position:
                 submitLenth(true);
                 break;
-            case R.id.img_pao_position:
+            case R.id.img_gan_position:
                 submitLenth(false);
                 break;
             case R.id.img_effect://效果配置
@@ -252,32 +279,32 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 mDataList.add(new SensorModel(mDataList.size()));
                 mAdapter.notifyDataSetChanged();
                 break;
-            case R.id.img_all_jia:
-                if (mRunlLenth < mPositionMax) {
-                    mTotalLength++;
-                    mBinding.etAll.setText(String.valueOf(mTotalLength));
-                }
-                break;
-            case R.id.img_all_jian:
-                if (mTotalLength > 0) {
-                    mTotalLength--;
-                    mBinding.etAll.setText(String.valueOf(mTotalLength));
-                }
-                break;
-            case R.id.img_pao_jia:
-                if (mRunlLenth < mPositionPoMax) {
-                    mRunlLenth++;
-                    mBinding.etPao.setText(String.valueOf(mRunlLenth));
+
+
+            case R.id.img_ti_jia:
+                if (mTransAdvanceShow < mTransAdvanceShowMax) {
+                    mTransAdvanceShow++;
+                    mBinding.etTi.setText(String.valueOf(mTransAdvanceShow));
                 }
 
                 break;
-            case R.id.img_pao_jian:
-                if (mRunlLenth > 0) {
-                    mRunlLenth--;
-                    mBinding.etPao.setText(String.valueOf(mRunlLenth));
+            case R.id.img_ti_jian:
+                if (mTransAdvanceShow > 0) {
+                    mTransAdvanceShow--;
+                    mBinding.etTi.setText(String.valueOf(mTransAdvanceShow));
                 }
                 break;
-            case R.id.tv_time:
+            case R.id.img_gan_jia:
+                mDetecStopTime++;
+                mBinding.etGan.setText(String.valueOf(mDetecStopTime));
+                break;
+            case R.id.img_gan_jian:
+                if (mDetecStopTime > 0) {
+                    mDetecStopTime--;
+                    mBinding.etGan.setText(String.valueOf(mDetecStopTime));
+                }
+                break;
+          /*  case R.id.tv_time:
                 TimePopupwindow timePopupwindow = new TimePopupwindow(aty);
                 timePopupwindow.setTimeListener(new TimePopupwindow.TimeListener() {
                     @Override
@@ -295,12 +322,34 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                     }
                 });
                 timePopupwindow.showPopupWindow();
+                break;*/
+            case R.id.tv_deng_xin:
+                showDengXin();
+                break;
+            case R.id.tv_gan_color:
+                showGanColor();
+                break;
+            case R.id.img_deng_xin_position://灯带信号
+                ControlModel controlModel = new ControlModel();
+                controlModel.setCommType(2);
+                controlModel.setPara("Signal");
+                controlModel.setData(mSignal);
+                String str = ParseJsonUtils.getjsonStr(controlModel);
+                PhoneClient.getIntance().send(str);//发送设置消息
+                break;
+            case R.id.img_gan_color_position://灯带信号
+                ControlModel controlModel1 = new ControlModel();
+                controlModel1.setCommType(2);
+                controlModel1.setPara("TransDirDetecColor");
+                controlModel1.setData(mTransDirDetecColor);
+                String str1 = ParseJsonUtils.getjsonStr(controlModel1);
+                PhoneClient.getIntance().send(str1);//发送设置消息
                 break;
         }
     }
 
     private void initTextSwitch() {
-        mBinding.etAll.addTextChangedListener(new TextWatcher() {
+        mBinding.etTi.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -308,20 +357,22 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                 if (!TextUtils.isEmpty(s)) {
                     int num = Integer.valueOf(s.toString());
-                    if (num > mPositionMax) {
-                        mBinding.etAll.setText("" + mPositionMax);
-                        mBinding.etAll.setSelection(4);
+                    if (num > mTransAdvanceShowMax) {
+                        mBinding.etTi.setText("" + mTransAdvanceShowMax);
+                        mBinding.etTi.setSelection(4);
                     } else if (num < 0) {
-                        mBinding.etAll.setText("" + mPositionMax);
-                        mBinding.etAll.setSelection(4);
+                        mBinding.etTi.setText("" + mTransAdvanceShowMax);
+                        mBinding.etTi.setSelection(4);
                     } else {
-                        mTotalLength = num;
+                        mTransAdvanceShow = num;
                     }
 
 
                 }
+
             }
 
             @Override
@@ -329,7 +380,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             }
         });
-        mBinding.etPao.addTextChangedListener(new TextWatcher() {
+        mBinding.etGan.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -339,17 +390,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!TextUtils.isEmpty(s)) {
                     int num = Integer.valueOf(s.toString());
-                    if (num > mPositionPoMax) {
-                        mBinding.etPao.setText("" + mPositionPoMax);
-                        mBinding.etPao.setSelection(4);
-                    } else if (num < 0) {
-                        mBinding.etPao.setText("" + mPositionPoMax);
-                        mBinding.etPao.setSelection(4);
-                    } else {
-                        mRunlLenth = num;
-                    }
-
-
+                    mDetecStopTime = num;
                 }
             }
 
@@ -369,7 +410,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         setMode(mMode, bl);
         mBinding.tvLvdong.setClickable(bl);
         mBinding.tvHuxi.setClickable(bl);
-        mBinding.tvZhuguang.setClickable(bl);
+        mBinding.tvQuanguan.setClickable(bl);
         mBinding.tvCaihong.setClickable(bl);
         mBinding.tvLiux.setClickable(bl);
 
@@ -378,13 +419,15 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.imgSwitchOffBg.setVisibility(!bl ? View.VISIBLE : View.GONE);
         mBinding.seekArc.setEnabled(bl);
         if (!bl) {
-            mBinding.tvTime.setText("不熄灭");
+//            mBinding.tvTime.setText("不熄灭");
+            mBinding.sbLenth.setProgress(0);
             mBinding.sbSpeed.setProgress(0);
             mBinding.seekArc.setProgress(0);
         } else {
-            mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
+//            mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
             mBinding.sbSpeed.setProgress(mSpeed);
             mBinding.seekArc.setProgress(mLum);
+            mBinding.sbLenth.setProgress(mRunLenthPram);
         }
         if (send) {
             ControlModel controlModel = new ControlModel();
@@ -422,15 +465,20 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.seekArc.setProgress(model.getLum());
         mBinding.sbSpeed.setProgress(model.getSpeed());
 
-        mRunlLenth = model.getRunLenth();
-        mTotalLength = model.getTotalLenth();
+        mRunLenthPram = model.getRunLenth();
+        mDetecStopTime = model.getDetecStopTime();
+        mTransAdvanceShow = model.getTransAdvanceShow();
+        mSignal = model.getSignal();
+        mTransDirDetecColor = model.getTransDirDetecColor();
 
-        mBinding.etAll.setText(mTotalLength + "");
-        mBinding.etPao.setText(mRunlLenth + "");
+        mBinding.etTi.setText(mTransAdvanceShow + "");
+        mBinding.etGan.setText(mDetecStopTime + "");
+        mBinding.tvGanColor.setText("SolidColor".equals(mTransDirDetecColor) ? "单色" : "七彩");
+        mBinding.tvDengXin.setText(mSignal + "");
 
 
-        mPutOutMin = model.getAtuoOffTime();
-        mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
+//        mPutOutMin = model.getAtuoOffTime();
+//        mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
         mIsSwitch = model.getONOFFStatus().equals("Power");
         updateSwicth(mIsSwitch, false);
 
@@ -441,7 +489,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                     mDataList.add(new SensorModel(item.get(1), item.get(0)));
                 }
             }
-            if (mAdapter!=null) {
+            if (mAdapter != null) {
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -464,10 +512,11 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                     mBinding.tvHuxi.setChecked(bl);
                     break;
                 case 4:
-                    mBinding.tvZhuguang.setChecked(bl);
+                    mBinding.tvCaihong.setChecked(bl);
                     break;
                 case 5:
-                    mBinding.tvCaihong.setChecked(bl);
+                    mBinding.tvQuanguan.setChecked(bl);
+
                     break;
             }
         }
@@ -568,7 +617,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                     @Override
                     public void onClick(View v) {
                         int po = mDataList.get(position).getPosition();
-                        if (po < mPositionMax) {
+                        if (po < 1024) {
                             po++;
                             mDataList.get(position).setPosition(po);
                         }
@@ -591,11 +640,11 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (!TextUtils.isEmpty(s)) {
                             int num = Integer.valueOf(s.toString());
-                            if (num > mPositionPoMax) {
-                                binding.etNum.setText("" + mPositionPoMax);
+                            if (num > 1024) {
+                                binding.etNum.setText("" + 1024);
                                 binding.etNum.setSelection(4);
                             } else if (num < 0) {
-                                binding.etNum.setText("" + mPositionPoMax);
+                                binding.etNum.setText("" + 1024);
                                 binding.etNum.setSelection(4);
                             } else {
                                 mDataList.get(position).setPosition(num);
@@ -625,7 +674,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             @Override
             public void keyBoardHide(int height) {
-                if (mAdapter!=null) {
+                if (mAdapter != null) {
                     mAdapter.notifyDataSetChanged();
                 }
             }
@@ -651,9 +700,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             type = 2;
         } else if (mBinding.tvHuxi.isChecked()) {
             type = 3;
-        } else if (mBinding.tvZhuguang.isChecked()) {
-            type = 4;
+
         } else if (mBinding.tvCaihong.isChecked()) {
+            type = 4;
+        } else if (mBinding.tvQuanguan.isChecked()) {
             type = 5;
         }
         if (type == 0) {
@@ -670,7 +720,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         submitModel.setColor(mColor);
         submitModel.setSpeed(speed);
         submitModel.setLum(lum);
-        submitModel.setAtuoOffTime(mPutOutMin);
+//        submitModel.setAtuoOffTime(mPutOutMin);
 
         String str = ParseJsonUtils.getjsonStr(submitModel);
 
@@ -682,11 +732,11 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         ControlModel1 controlModel = new ControlModel1();
         controlModel.setCommType(2);
         if (is_add) {
-            controlModel.setPara("TotalLenth");
-            controlModel.setData(mTotalLength);
+            controlModel.setPara("TransAdvanceShow");
+            controlModel.setData(mTransAdvanceShow);
         } else {
-            controlModel.setPara("RunlLenth");
-            controlModel.setData(mRunlLenth);
+            controlModel.setPara("DetecStopTime");
+            controlModel.setData(mDetecStopTime);
         }
         String str = ParseJsonUtils.getjsonStr(controlModel);
         PhoneClient.getIntance().send(str);//发送设置消息
@@ -728,5 +778,39 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         return su.toString();
     }
 
+    private void showDengXin() {
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(aty);
+        builder.setTitle("选择灯带信号");
+        //    指定下拉列表的显示数据
+        final String[] cities = {"RGB", "RBG", "GRB", "GBR", "BRG", "BGR"};
+        //    设置一个下拉的列表选择项
+        builder.setItems(cities, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                mSignal = cities[which];
+                mBinding.tvDengXin.setText(mSignal);
+            }
+        });
+        builder.show();
+    }
+
+    private void showGanColor() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(aty);
+        builder.setTitle("选择横梯的感应颜色");
+        //    指定下拉列表的显示数据
+        final String[] cities = {"单色", "七彩"};
+        //    设置一个下拉的列表选择项
+        builder.setItems(cities, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                mTransDirDetecColor = "单色".equals(cities[which]) ? "SolidColor" : "Colours";
+                mBinding.tvGanColor.setText(cities[which]);
+            }
+        });
+        builder.show();
+    }
 }

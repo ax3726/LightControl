@@ -76,7 +76,8 @@
                     android:id="@+id/lly_effect"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                   >
 
                     <com.mf.lightcontrol.widget.AutoRadioGroup
                         android:id="@+id/rg_body"
@@ -125,18 +126,6 @@
                             android:textColor="@color/selector_switch_color"
                             android:textSize="24px" />
 
-                        <RadioButton
-                            android:id="@+id/tv_zhuguang"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:button="@null"
-                            android:drawableTop="@drawable/selector_zhuguang"
-                            android:drawablePadding="14px"
-                            android:gravity="center_horizontal"
-                            android:text="烛光"
-                            android:textColor="@color/selector_switch_color"
-                            android:textSize="24px" />
 
                         <RadioButton
                             android:id="@+id/tv_caihong"
@@ -148,6 +137,18 @@
                             android:drawablePadding="14px"
                             android:gravity="center_horizontal"
                             android:text="彩虹"
+                            android:textColor="@color/selector_switch_color"
+                            android:textSize="24px" />
+                        <RadioButton
+                            android:id="@+id/tv_quanguan"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:button="@null"
+                            android:drawableTop="@drawable/selector_quanguan"
+                            android:drawablePadding="14px"
+                            android:gravity="center_horizontal"
+                            android:text="全关"
                             android:textColor="@color/selector_switch_color"
                             android:textSize="24px" />
 
@@ -248,7 +249,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="走灯速度"
+                            android:text="走灯"
                             android:textColor="@color/colorcccccc"
                             android:textSize="26px" />
 
@@ -266,40 +267,36 @@
 
 
                     </com.zhy.autolayout.AutoLinearLayout>
-
                     <com.zhy.autolayout.AutoLinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="73px"
-                        android:gravity="center_vertical"
+                        android:layout_marginTop="80px"
                         android:orientation="horizontal"
                         android:paddingLeft="81px"
-                        android:paddingRight="81px">
+                        android:paddingRight="50px">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="自动熄灭时间"
+                            android:text="长度"
                             android:textColor="@color/colorcccccc"
                             android:textSize="26px" />
 
-                        <TextView
-                            android:id="@+id/tv_time"
+                        <SeekBar
+                            android:id="@+id/sb_lenth"
                             android:layout_width="0dp"
-                            android:layout_height="58px"
-                            android:layout_marginLeft="30px"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="36px"
                             android:layout_weight="1"
-                            android:background="@drawable/shape_common_black"
-                            android:drawableRight="@drawable/down_icon"
-                            android:gravity="center"
-                            android:paddingRight="30px"
-                            android:text="不熄灭"
+                            android:maxHeight="5dp"
+                            android:progress="30"
 
-                            android:textColor="@color/colorWhite"
-                            android:textSize="24px" />
+                            android:progressDrawable="@drawable/speed_seekbar"
+                            android:thumb="@drawable/seek_icon" />
 
 
                     </com.zhy.autolayout.AutoLinearLayout>
+
 
 
                 </com.zhy.autolayout.AutoLinearLayout>
@@ -308,24 +305,59 @@
                     android:id="@+id/lly_lenth"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+android:visibility="gone"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="29px"
-                        android:text="长度/定位"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="30px" />
 
                     <com.zhy.autolayout.AutoRelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="65px"
+                        android:layout_marginTop="46px"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="33px"
+                        android:paddingRight="33px">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="灯带信号"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="26px" />
+
+                        <TextView
+                            android:id="@+id/tv_deng_xin"
+                            android:layout_width="315px"
+                            android:layout_height="58px"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="30px"
+                            android:background="@drawable/shape_common_black"
+                            android:drawableRight="@drawable/down_icon"
+                            android:gravity="center"
+                            android:paddingRight="30px"
+                            android:text="RGB"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="24px" />
+
+                        <ImageView
+                            android:id="@+id/img_deng_xin_position"
+                            android:layout_width="100px"
+                            android:layout_height="60px"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="53px"
+                            android:src="@drawable/img_position_icon" />
+
+                    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+                    <com.zhy.autolayout.AutoRelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="33px"
                         android:layout_marginTop="37px"
-                        android:layout_marginRight="65px"
+                        android:layout_marginRight="33px"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -333,7 +365,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:text="总长度"
+                            android:text="横梯提前显示"
                             android:textColor="@color/colorWhite"
                             android:textSize="26px" />
 
@@ -348,14 +380,14 @@
                             android:background="@drawable/shape_common_black">
 
                             <EditText
-                                android:id="@+id/et_all"
+                                android:id="@+id/et_ti"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:inputType="number"
                                 android:padding="0dp"
-                                android:text="1024"
+                                android:text="0"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="26px" />
 
@@ -363,34 +395,98 @@
 
 
                         <ImageView
-                            android:id="@+id/img_all_jian"
+                            android:id="@+id/img_ti_jian"
                             android:layout_width="80px"
                             android:layout_height="60px"
                             android:layout_toLeftOf="@+id/fly_all"
                             android:src="@drawable/img_jian_icon" />
 
                         <ImageView
-                            android:id="@+id/img_all_jia"
+                            android:id="@+id/img_ti_jia"
                             android:layout_width="80px"
                             android:layout_height="60px"
                             android:layout_toRightOf="@+id/fly_all"
                             android:src="@drawable/img_jia_icon" />
 
                         <ImageView
-                            android:id="@+id/img_all_position"
+                            android:id="@+id/img_ti_position"
                             android:layout_width="100px"
                             android:layout_height="60px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/img_position_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="18px"
+                            android:layout_toRightOf="@id/img_ti_jia"
+                            android:text="步"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="26px" />
                     </com.zhy.autolayout.AutoRelativeLayout>
 
                     <com.zhy.autolayout.AutoRelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="65px"
                         android:layout_marginTop="33px"
-                        android:layout_marginRight="65px"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="33px"
+                        android:paddingRight="33px">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="横梯感应颜色"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="26px" />
+
+                        <TextView
+                            android:id="@+id/tv_gan_color"
+                            android:layout_width="315px"
+                            android:layout_height="58px"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="30px"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_common_black"
+                            android:drawableRight="@drawable/down_icon"
+                            android:gravity="center"
+                            android:paddingRight="30px"
+                            android:text="单色"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="24px" />
+
+                        <ImageView
+                            android:id="@+id/img_gan_color_position"
+                            android:layout_width="100px"
+                            android:layout_height="60px"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="53px"
+                            android:src="@drawable/img_position_icon" />
+
+                    </com.zhy.autolayout.AutoRelativeLayout>
+
+                    <com.mf.lightcontrol.widget.ColorPickerSeekView
+                        android:id="@+id/picker1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="33px"
+                        android:layout_marginLeft="13px"
+                        android:layout_marginRight="13px"
+                        android:background="#00ffffff"
+                        app:indicatorColor="#ffffff"
+                        app:indicatorEnable="true"
+                        app:orientation="horizontal" />
+
+                    <com.zhy.autolayout.AutoRelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="33px"
+                        android:layout_marginTop="33px"
+                        android:layout_marginRight="33px"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -398,7 +494,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:text="跑灯长度"
+                            android:text="感应停止时间"
                             android:textColor="@color/colorWhite"
                             android:textSize="26px" />
 
@@ -412,14 +508,14 @@
                             android:background="@drawable/shape_common_black">
 
                             <EditText
-                                android:id="@+id/et_pao"
+                                android:id="@+id/et_gan"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:inputType="number"
                                 android:padding="0dp"
-                                android:text="1024"
+                                android:text="0"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="26px" />
 
@@ -427,25 +523,36 @@
 
 
                         <ImageView
-                            android:id="@+id/img_pao_jian"
+                            android:id="@+id/img_gan_jian"
                             android:layout_width="80px"
                             android:layout_height="60px"
                             android:layout_toLeftOf="@+id/fly_pao"
                             android:src="@drawable/img_jian_icon" />
 
                         <ImageView
-                            android:id="@+id/img_pao_jia"
+                            android:id="@+id/img_gan_jia"
                             android:layout_width="80px"
                             android:layout_height="60px"
                             android:layout_toRightOf="@+id/fly_pao"
                             android:src="@drawable/img_jia_icon" />
 
                         <ImageView
-                            android:id="@+id/img_pao_position"
+                            android:id="@+id/img_gan_position"
                             android:layout_width="100px"
                             android:layout_height="60px"
                             android:layout_alignParentRight="true"
                             android:src="@drawable/img_position_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="18px"
+                            android:layout_toRightOf="@id/img_gan_jia"
+                            android:text="秒"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="26px" />
+
                     </com.zhy.autolayout.AutoRelativeLayout>
 
                     <com.zhy.autolayout.AutoRelativeLayout

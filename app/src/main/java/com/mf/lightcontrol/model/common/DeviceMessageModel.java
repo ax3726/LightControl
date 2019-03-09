@@ -1,10 +1,6 @@
 package com.mf.lightcontrol.model.common;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,9 +28,12 @@ public class DeviceMessageModel implements Serializable {
     private int Color;
     private int Lum;
     private int Speed;
-    private int AtuoOffTime;
-    private int TotalLenth;
     private int RunLenth;
+    private String TotalONOFFStatus;
+    private String Signal;
+    private String TransDirDetecColor;
+    private int TransAdvanceShow;
+    private int DetecStopTime;
     private List<List<Integer>> IRMapping;
 
     public int getRecCommType() {
@@ -85,21 +84,6 @@ public class DeviceMessageModel implements Serializable {
         this.Speed = Speed;
     }
 
-    public int getAtuoOffTime() {
-        return AtuoOffTime;
-    }
-
-    public void setAtuoOffTime(int AtuoOffTime) {
-        this.AtuoOffTime = AtuoOffTime;
-    }
-
-    public int getTotalLenth() {
-        return TotalLenth;
-    }
-
-    public void setTotalLenth(int TotalLenth) {
-        this.TotalLenth = TotalLenth;
-    }
 
     public int getRunLenth() {
         return RunLenth;
@@ -117,5 +101,43 @@ public class DeviceMessageModel implements Serializable {
         this.IRMapping = IRMapping;
     }
 
+    public String getTotalONOFFStatus() {
+        return TotalONOFFStatus;
+    }
 
+    public void setTotalONOFFStatus(String totalONOFFStatus) {
+        TotalONOFFStatus = totalONOFFStatus;
+    }
+
+    public String getSignal() {
+        return Signal;
+    }
+
+    public void setSignal(String signal) {
+        Signal = signal;
+    }
+
+    public String getTransDirDetecColor() {
+        return TransDirDetecColor;
+    }
+
+    public void setTransDirDetecColor(String transDirDetecColor) {
+        TransDirDetecColor = transDirDetecColor;
+    }
+
+    public int getTransAdvanceShow() {
+        return TransAdvanceShow;
+    }
+
+    public void setTransAdvanceShow(int transAdvanceShow) {
+        TransAdvanceShow = transAdvanceShow;
+    }
+
+    public int getDetecStopTime() {
+        return DetecStopTime;
+    }
+
+    public void setDetecStopTime(int detecStopTime) {
+        DetecStopTime = detecStopTime;
+    }
 }

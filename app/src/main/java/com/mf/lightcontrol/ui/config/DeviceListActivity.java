@@ -136,6 +136,8 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
             protected void convert(ViewHolder holder, DeviceModel item, int position) {
 
                 ItemDeviceListBinding binding = holder.getBinding(ItemDeviceListBinding.class);
+
+                binding.imgOff.setSelected(true);
                 binding.tvName.setText(TextUtils.isEmpty(item.getName()) ? "未知设备" + (position + 1) : item.getName());
                 binding.imgEdit.setOnClickListener(new View.OnClickListener() {
                     @Override

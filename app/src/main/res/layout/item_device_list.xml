@@ -62,10 +62,11 @@
 
 
         <ImageView
+            android:id="@+id/img_off"
             android:layout_width="126px"
             android:layout_height="63px"
             android:layout_alignParentRight="true"
-            android:src="@drawable/device_turn_on_icon" />
+            android:src="@drawable/selector_device_offon" />
 
     </com.zhy.autolayout.AutoRelativeLayout>
 </layout>

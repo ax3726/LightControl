@@ -203,7 +203,7 @@ public class PhoneClient {
 
 
                 DeviceMessageModel messageModel = DemoUtils.parseDeviceMessgaeData(packet.getData());
-                if (messageModel==null||TextUtils.isEmpty(messageModel.getONOFFStatus())) {
+                if (messageModel==null||TextUtils.isEmpty(messageModel.getSignal())) {
                     ReceiverModel receiverModel = DemoUtils.parseDeviceUserData(packet.getData());
                     if (receiverModel != null) {
                         if (receiverModel.getRecCommType() == 0) {//设置参数应答
@@ -211,7 +211,7 @@ public class PhoneClient {
                                 mUdpListener.onSetting();
                         } else if (receiverModel.getRecCommType() == 1) {//搜索设备应答
                             if (mSearchListener != null)
-                                mSearchListener.onDevice(packet.getAddress().getHostAddress(), receiverModel.getProduct());
+                                mSearchListener.onDevice(packet.getAddress().getHostAddress(), receiverModel.getProduct(),receiverModel.getTotalONOFFStatus());
                         } else if (receiverModel.getRecCommType() == 3) {//设置红外传感器映射参数
                             if (mUdpListener != null)
                                 mUdpListener.onRed();
@@ -281,7 +281,7 @@ public class PhoneClient {
     }
 
     public interface SearchListener {
-        void onDevice(String ip, String name);
+        void onDevice(String ip, String name,String state);
     }
 
     public interface DeviceListener {

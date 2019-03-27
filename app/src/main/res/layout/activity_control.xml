@@ -249,7 +249,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="走灯"
+                            android:text="速度"
                             android:textColor="@color/colorcccccc"
                             android:textSize="26px" />
 
@@ -595,6 +595,9 @@ android:visibility="gone"
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/rc_body"
+                            android:scrollbars="vertical"
+                            android:scrollbarSize="2dp"
+                            android:scrollbarThumbVertical="@color/colorWhite"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 

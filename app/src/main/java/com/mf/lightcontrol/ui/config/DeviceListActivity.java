@@ -90,9 +90,9 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         PhoneClient.getIntance().init();//初始化UDP通讯
         PhoneClient.getIntance().setSearchListener(new PhoneClient.SearchListener() {
             @Override
-            public void onDevice(String ip, String name) {
+            public void onDevice(String ip, String name, String state) {
                 Message message = new Message();
-                message.obj = new DeviceModel(name, ip);
+                message.obj = new DeviceModel(name, ip, state);
                 message.what = 0;
                 mHandler.sendMessage(message);
             }
@@ -137,7 +137,23 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
 
                 ItemDeviceListBinding binding = holder.getBinding(ItemDeviceListBinding.class);
 
-                binding.imgOff.setSelected(true);
+                binding.imgState.setSelected("Power".equals(item.getState()));
+                binding.imgOff.setSelected("Power".equals(item.getState()));
+                binding.imgOff.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String new_state = "Power".equals(item.getState()) ? "Sleep" : "Power";
+                        mDataList.get(position).setState(new_state);
+                        ControlModel controlModel = new ControlModel();
+                        controlModel.setCommType(2);
+                        controlModel.setPara("TotalONOFFStatus");
+                        controlModel.setData(new_state);
+                        String str = ParseJsonUtils.getjsonStr(controlModel);
+                        PhoneClient.getIntance().setSendIP(item.getIp());
+                        PhoneClient.getIntance().send(str);//发送设置消息
+                        notifyDataSetChanged();
+                    }
+                });
                 binding.tvName.setText(TextUtils.isEmpty(item.getName()) ? "未知设备" + (position + 1) : item.getName());
                 binding.imgEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -163,18 +179,22 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                 binding.rlyItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PhoneClient.getIntance().setSendIP(item.getIp());
-                        PhoneClient.getIntance().send(ParseJsonUtils.getjsonStr(new LoadMessageModel()));
-                        PhoneClient.getIntance().setDeviceListener(new PhoneClient.DeviceListener() {
-                            @Override
-                            public void onDevice(DeviceMessageModel model) {
-                                mHandler.sendEmptyMessage(1);
-                                startActivity(new Intent(aty, ControlActivity.class)
-                                        .putExtra("data", model)
-                                        .putExtra("name", item.getName()));
-                            }
-                        });
-                        showWaitDialog("读取设备信息中...");
+                        if (binding.imgOff.isSelected()) {
+                            PhoneClient.getIntance().setSendIP(item.getIp());
+                            PhoneClient.getIntance().send(ParseJsonUtils.getjsonStr(new LoadMessageModel()));
+                            PhoneClient.getIntance().setDeviceListener(new PhoneClient.DeviceListener() {
+                                @Override
+                                public void onDevice(DeviceMessageModel model) {
+                                    mHandler.sendEmptyMessage(1);
+                                    startActivity(new Intent(aty, ControlActivity.class)
+                                            .putExtra("data", model)
+                                            .putExtra("name", item.getName()));
+                                }
+                            });
+                            showWaitDialog("读取设备信息中...");
+                        } else {
+                            showToast("设备已关机！请开启后使用");
+                        }
 
 
                     }

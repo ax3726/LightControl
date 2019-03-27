@@ -3,10 +3,22 @@ package com.mf.lightcontrol.model.control;
 public class DeviceModel {
     private String name;
     private String ip;
+    private String state;
 
-    public DeviceModel(String name, String ip) {
+
+
+    public DeviceModel(String name, String ip, String state) {
         this.name = name;
         this.ip = ip;
+        this.state = state;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getName() {

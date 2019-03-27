@@ -2,6 +2,7 @@ package com.mf.lightcontrol.ui.control;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +30,7 @@ import com.mf.lightcontrol.model.control.RedModel;
 import com.mf.lightcontrol.model.control.SensorModel;
 import com.mf.lightcontrol.model.control.SubmitModel;
 import com.mf.lightcontrol.utils.SoftKeyBoardListener;
+import com.mf.lightcontrol.widget.ColorPickerSeekView;
 import com.mf.lightcontrol.widget.ColorPickerView;
 import com.mf.lightcontrol.widget.SeekArc;
 import com.mf.lightcontrol.widget.dialog.DelSensorDialog;
@@ -91,13 +93,16 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.imgSwitchBg.setOnColorChangedListenner(new ColorPickerView.OnColorChangedListener() {
             @Override
             public void onColorChanged(int r, int g, int b) {
-                mColor = toHexFromColor(r, g, b);
-                ControlModel controlModel = new ControlModel();
-                controlModel.setCommType(2);
-                controlModel.setPara("Color");
-                controlModel.setData(mColor);
-                String str = ParseJsonUtils.getjsonStr(controlModel);
-                PhoneClient.getIntance().send(str);//发送设置消息
+                String color = toHexFromColor(r, g, b);
+                if (!"0x000000".equals(color)) {
+                    mColor = color;
+                    ControlModel controlModel = new ControlModel();
+                    controlModel.setCommType(2);
+                    controlModel.setPara("Color");
+                    controlModel.setData(mColor);
+                    String str = ParseJsonUtils.getjsonStr(controlModel);
+                    PhoneClient.getIntance().send(str);//发送设置消息
+                }
 
             }
 
@@ -119,7 +124,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                if (!mIsMode) {
+                if (mIsMode) {
                     ControlModel1 controlModel = new ControlModel1();
                     controlModel.setCommType(2);
                     controlModel.setPara("Mode");
@@ -146,7 +151,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                         PhoneClient.getIntance().send(str);//发送设置消息
                     }
                 } else {
-                    mIsMode = false;
+                    //mIsMode = false;
                 }
                 switch (checkedId) {
                     case R.id.tv_liux://流行
@@ -233,7 +238,30 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                 PhoneClient.getIntance().send(str);//发送设置消息
             }
         });
+        mBinding.picker1.setOnColorPickerChangeListener(new ColorPickerSeekView.OnColorPickerChangeListener() {
+            @Override
+            public void onColorChanged(ColorPickerSeekView picker, int color) {
 
+            }
+
+            @Override
+            public void onStartTrackingTouch(ColorPickerSeekView picker) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(ColorPickerSeekView picker) {
+                if ("SolidColor".equals(mTransDirDetecColor)) {
+                    String color = picker.getColor();
+                    ControlModel controlModel1 = new ControlModel();
+                    controlModel1.setCommType(2);
+                    controlModel1.setPara("TransDirDetecSolidColor");
+                    controlModel1.setData(color);
+                    String str1 = ParseJsonUtils.getjsonStr(controlModel1);
+                    PhoneClient.getIntance().send(str1);//发送设置消息
+                }
+            }
+        });
     }
 
     @Override
@@ -403,9 +431,30 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
     }
 
+    /**
+     * 设置颜色条得状态
+     *
+     * @param bl
+     */
+    private void setPickerState(boolean bl) {
+        if (bl) {
+            mBinding.picker1.setEnabled(true);
+            mBinding.picker1.setColors(mBinding.picker1.createDefaultColorTable());
+        } else {
+
+            mBinding.picker1.setColors(new int[]{
+                    Color.rgb(204, 204, 204),
+                    Color.rgb(204, 204, 204),
+                    Color.rgb(204, 204, 204)
+            });
+            mBinding.picker1.setEnabled(false);
+        }
+
+    }
+
     private void updateSwicth(boolean bl, boolean send) {
 
-        mIsMode = true;
+
 
         setMode(mMode, bl);
         mBinding.tvLvdong.setClickable(bl);
@@ -437,6 +486,8 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             String str = ParseJsonUtils.getjsonStr(controlModel);
             PhoneClient.getIntance().send(str);//发送设置消息
         }
+
+        mIsMode = true;
     }
 
     @Override
@@ -476,10 +527,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         mBinding.tvGanColor.setText("SolidColor".equals(mTransDirDetecColor) ? "单色" : "七彩");
         mBinding.tvDengXin.setText(mSignal + "");
 
-
+        setPickerState("SolidColor".equals(mTransDirDetecColor));
 //        mPutOutMin = model.getAtuoOffTime();
 //        mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
-        mIsSwitch = model.getONOFFStatus().equals("Power");
+        //    mIsSwitch = model.getONOFFStatus().equals("Power");
         updateSwicth(mIsSwitch, false);
 
         List<List<Integer>> irMapping = model.getIRMapping();
@@ -809,6 +860,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
                 mTransDirDetecColor = "单色".equals(cities[which]) ? "SolidColor" : "Colours";
                 mBinding.tvGanColor.setText(cities[which]);
+                setPickerState("SolidColor".equals(mTransDirDetecColor));
             }
         });
         builder.show();

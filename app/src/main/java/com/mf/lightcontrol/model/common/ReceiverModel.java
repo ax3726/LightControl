@@ -15,6 +15,15 @@ public class ReceiverModel {
     private String IPADD;
     private String MACADD;
     private String SN;
+    private String TotalONOFFStatus;
+
+    public String getTotalONOFFStatus() {
+        return TotalONOFFStatus;
+    }
+
+    public void setTotalONOFFStatus(String totalONOFFStatus) {
+        TotalONOFFStatus = totalONOFFStatus;
+    }
 
     public String getProduct() {
         return Product;

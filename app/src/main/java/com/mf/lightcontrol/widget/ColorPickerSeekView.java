@@ -105,6 +105,7 @@ public class ColorPickerSeekView extends View {
     private int[] colors = null;
 
     private int currentColor;
+    private String currentColorStr="";
 
     /**
      * 控件方向
@@ -449,7 +450,7 @@ public class ColorPickerSeekView extends View {
      *
      * @return 颜色值
      */
-    public int getColor() {
+    public String getColor() {
         return calcuColor();
     }
 
@@ -466,7 +467,7 @@ public class ColorPickerSeekView extends View {
         return true;
     }
 
-    private int calcuColor() {
+    private String calcuColor() {
         int x, y;
         if (orientation == Orientation.HORIZONTAL) { // 水平
             y = (rect.bottom - rect.top) / 2;
@@ -489,9 +490,38 @@ public class ColorPickerSeekView extends View {
         }
         int pixel = bitmapForColor.getPixel(x, y);
         currentColor = pixelToColor(pixel);
-        return currentColor;
+        currentColorStr = pixelToColor1(pixel);
+        return currentColorStr;
+    }
+    private  String toHexFromColor(int red, int green, int blue) {
+        String r, g, b;
+        StringBuilder su = new StringBuilder();
+        r = Integer.toHexString(red);
+        g = Integer.toHexString(green);
+        b = Integer.toHexString(blue);
+        r = r.length() == 1 ? "0" + r : r;
+        g = g.length() == 1 ? "0" + g : g;
+        b = b.length() == 1 ? "0" + b : b;
+        r = r.toUpperCase();
+        g = g.toUpperCase();
+        b = b.toUpperCase();
+        su.append("0x");
+        su.append(r);
+        su.append(g);
+        su.append(b);
+        //0xFF0000FF
+        return su.toString();
     }
 
+    private String pixelToColor1(int pixel) {
+
+
+        int red = Color.red(pixel);
+        int green = Color.green(pixel);
+        int blue = Color.blue(pixel);
+
+        return toHexFromColor(red,green,blue);
+    }
     private int pixelToColor(int pixel) {
 
         int alpha = Color.alpha(pixel);

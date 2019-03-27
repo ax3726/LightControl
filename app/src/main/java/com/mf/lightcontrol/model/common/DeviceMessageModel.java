@@ -6,34 +6,35 @@ import java.util.List;
 /**
  * Created by LiMing
  * Date 2019/1/15
+ *  private List<List<Integer>> IRMapping;
  */
 public class DeviceMessageModel implements Serializable {
 
+
     /**
      * RecCommType : 3
-     * ONOFFStatus : Power
-     * Mode : 4
-     * Color : 16711680
+     * Signal : BRG
+     * TransDirDetecColor : SolidColor
+     * TransAdvanceShow : 3
+     * DetecStopTime : 3
+     * Mode : 2
+     * Color : 16711680`
      * Lum : 50
      * Speed : 50
-     * AtuoOffTime : 0
-     * TotalLenth : 1024
-     * RunLenth : 1024
-     * IRMapping : [[0,10],[1,20],[3,35],[4,40]]
+     * RunLenth : 15
+     * IRMapping : []
      */
 
     private int RecCommType;
-    private String ONOFFStatus;
+    private String Signal;
+    private String TransDirDetecColor;
+    private int TransAdvanceShow;
+    private int DetecStopTime;
     private int Mode;
     private int Color;
     private int Lum;
     private int Speed;
     private int RunLenth;
-    private String TotalONOFFStatus;
-    private String Signal;
-    private String TransDirDetecColor;
-    private int TransAdvanceShow;
-    private int DetecStopTime;
     private List<List<Integer>> IRMapping;
 
     public int getRecCommType() {
@@ -44,12 +45,36 @@ public class DeviceMessageModel implements Serializable {
         this.RecCommType = RecCommType;
     }
 
-    public String getONOFFStatus() {
-        return ONOFFStatus;
+    public String getSignal() {
+        return Signal;
     }
 
-    public void setONOFFStatus(String ONOFFStatus) {
-        this.ONOFFStatus = ONOFFStatus;
+    public void setSignal(String Signal) {
+        this.Signal = Signal;
+    }
+
+    public String getTransDirDetecColor() {
+        return TransDirDetecColor;
+    }
+
+    public void setTransDirDetecColor(String TransDirDetecColor) {
+        this.TransDirDetecColor = TransDirDetecColor;
+    }
+
+    public int getTransAdvanceShow() {
+        return TransAdvanceShow;
+    }
+
+    public void setTransAdvanceShow(int TransAdvanceShow) {
+        this.TransAdvanceShow = TransAdvanceShow;
+    }
+
+    public int getDetecStopTime() {
+        return DetecStopTime;
+    }
+
+    public void setDetecStopTime(int DetecStopTime) {
+        this.DetecStopTime = DetecStopTime;
     }
 
     public int getMode() {
@@ -84,7 +109,6 @@ public class DeviceMessageModel implements Serializable {
         this.Speed = Speed;
     }
 
-
     public int getRunLenth() {
         return RunLenth;
     }
@@ -99,45 +123,5 @@ public class DeviceMessageModel implements Serializable {
 
     public void setIRMapping(List<List<Integer>> IRMapping) {
         this.IRMapping = IRMapping;
-    }
-
-    public String getTotalONOFFStatus() {
-        return TotalONOFFStatus;
-    }
-
-    public void setTotalONOFFStatus(String totalONOFFStatus) {
-        TotalONOFFStatus = totalONOFFStatus;
-    }
-
-    public String getSignal() {
-        return Signal;
-    }
-
-    public void setSignal(String signal) {
-        Signal = signal;
-    }
-
-    public String getTransDirDetecColor() {
-        return TransDirDetecColor;
-    }
-
-    public void setTransDirDetecColor(String transDirDetecColor) {
-        TransDirDetecColor = transDirDetecColor;
-    }
-
-    public int getTransAdvanceShow() {
-        return TransAdvanceShow;
-    }
-
-    public void setTransAdvanceShow(int transAdvanceShow) {
-        TransAdvanceShow = transAdvanceShow;
-    }
-
-    public int getDetecStopTime() {
-        return DetecStopTime;
-    }
-
-    public void setDetecStopTime(int detecStopTime) {
-        DetecStopTime = detecStopTime;
     }
 }

@@ -127,7 +127,6 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                Log.e("msg", "选择变化进来了");
 
                 if (!mIsMode) {
                     ControlModel1 controlModel = new ControlModel1();

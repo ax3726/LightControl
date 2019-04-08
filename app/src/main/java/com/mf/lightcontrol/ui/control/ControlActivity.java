@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -41,25 +40,25 @@ import java.util.List;
 
 public class ControlActivity extends BaseActivity<BasePresenter, ActivityControlBinding> {
 
-    private boolean                    mIsSwitch = true;
-    private boolean                    mIsFirst = true;
-    private List<SensorModel>          mDataList = new ArrayList<>();
+    private boolean mIsSwitch = false;
+    private boolean mIsFirst = false;
+    private List<SensorModel> mDataList = new ArrayList<>();
     private CommonAdapter<SensorModel> mAdapter;
 
-    private int     mTransAdvanceShow    = 0;//横梯的提前显示步数
-    private int     mTransAdvanceShowMax = 1024;//横梯的提前显示步数最大值
-    private int     mDetecStopTime       = 0;//感应停止时间
-    private int     mTotalLength         = 1024;//总长度
+    private int mTransAdvanceShow = 0;//横梯的提前显示步数
+    private int mTransAdvanceShowMax = 1024;//横梯的提前显示步数最大值
+    private int mDetecStopTime = 0;//感应停止时间
+    private int mTotalLength = 1024;//总长度
     //private int mPutOutMin = 0;//熄灭时间
-    private String  mColor               = "";//颜色
-    private String  mName                = "";//名字
-    private String  mSignal              = "";//灯带的控制信号 （取值“RGB”、“RBG”、“GRB”、“ GBR”、“ BRG”、“ BGR”）
-    private String  mTransDirDetecColor  = "";//横梯的感应颜色种类  （取值“SolidColor”、” Colours”）
-    private int     mLum                 = 0;
-    private int     mSpeed               = 0;//速度
-    private int     mRunLenthPram        = 0;//长度
-    private int     mMode                = 0;
-    private boolean mIsMode              = false;//是否设置模式
+    private String mColor = "";//颜色
+    private String mName = "";//名字
+    private String mSignal = "";//灯带的控制信号 （取值“RGB”、“RBG”、“GRB”、“ GBR”、“ BRG”、“ BGR”）
+    private String mTransDirDetecColor = "";//横梯的感应颜色种类  （取值“SolidColor”、” Colours”）
+    private int mLum = 0;
+    private int mSpeed = 0;//速度
+    private int mRunLenthPram = 0;//长度
+    private int mMode = 0;
+    private boolean mIsMode = false;//是否设置模式
 
 
     @Override
@@ -154,10 +153,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                         String str = ParseJsonUtils.getjsonStr(controlModel);
                         PhoneClient.getIntance().send(str);//发送设置消息
                     }
-                    mIsFirst=true;
+                    mIsFirst = true;
                 } else {
                     mIsMode = false;
-                    if (!mIsFirst&&mIsSwitch) {
+                    if (!mIsFirst && mIsSwitch) {
                         ControlModel1 controlModel = new ControlModel1();
                         controlModel.setCommType(2);
                         controlModel.setPara("Mode");
@@ -183,7 +182,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
                             String str = ParseJsonUtils.getjsonStr(controlModel);
                             PhoneClient.getIntance().send(str);//发送设置消息
                         }
-                        mIsFirst=true;
+                        mIsFirst = true;
                     }
                 }
                 switch (checkedId) {
@@ -285,7 +284,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             @Override
             public void onStopTrackingTouch(ColorPickerSeekView picker) {
                 if ("SolidColor".equals(mTransDirDetecColor)) {
-                    String       color         = picker.getColor();
+                    String color = picker.getColor();
                     ControlModel controlModel1 = new ControlModel();
                     controlModel1.setCommType(2);
                     controlModel1.setPara("TransDirDetecSolidColor");
@@ -565,7 +564,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         setPickerState("SolidColor".equals(mTransDirDetecColor));
 //        mPutOutMin = model.getAtuoOffTime();
 //        mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
-        //    mIsSwitch = model.getONOFFStatus().equals("Power");
+        mIsSwitch = "Power".equals(model.getONOFF());
         updateSwicth(mIsSwitch, false, true);
 
         List<List<Integer>> irMapping = model.getIRMapping();
@@ -624,10 +623,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    hideWaitDialog();
+                    //   hideWaitDialog();
                     showToast("设置成功!");
-                    startActivity(ControlSuccessActivity.class);
-                    finish();
+//                    startActivity(ControlSuccessActivity.class);
+//                    finish();
                     break;
                 case 1://红外
                     hideWaitDialog();
@@ -647,17 +646,17 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
             @Override
             public void onSetting() {
-                //   mHandler.sendEmptyMessage(0);
+                mHandler.sendEmptyMessage(0);
             }
 
             @Override
             public void onRed() {
-                //   mHandler.sendEmptyMessage(1);
+                mHandler.sendEmptyMessage(1);
             }
 
             @Override
             public void onLenth() {
-                //  mHandler.sendEmptyMessage(2);
+                mHandler.sendEmptyMessage(2);
             }
         });
     }
@@ -797,7 +796,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
             return;
         }
         int speed = mBinding.sbSpeed.getProgress();//速度
-        int lum   = mBinding.seekArc.getProgress();//亮度
+        int lum = mBinding.seekArc.getProgress();//亮度
 
         SubmitModel submitModel = new SubmitModel();
         submitModel.setCommType(0);
@@ -845,7 +844,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
      * @return 16进制颜色字符串
      */
     private static String toHexFromColor(int red, int green, int blue) {
-        String        r, g, b;
+        String r, g, b;
         StringBuilder su = new StringBuilder();
         r = Integer.toHexString(red);
         g = Integer.toHexString(green);

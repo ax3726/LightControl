@@ -206,7 +206,7 @@ public class PhoneClient {
                 if (messageModel==null||TextUtils.isEmpty(messageModel.getSignal())) {
                     ReceiverModel receiverModel = DemoUtils.parseDeviceUserData(packet.getData());
                     if (receiverModel != null) {
-                        if (receiverModel.getRecCommType() == 0) {//设置参数应答
+                        if (receiverModel.getRecCommType() == 2) {//设置参数应答
                             if (mUdpListener != null)
                                 mUdpListener.onSetting();
                         } else if (receiverModel.getRecCommType() == 1) {//搜索设备应答

@@ -34,8 +34,17 @@ public class DeviceMessageModel implements Serializable {
     private int Color;
     private int Lum;
     private int Speed;
+    private String ONOFF;
     private int RunLenth;
     private List<List<Integer>> IRMapping;
+
+    public String getONOFF() {
+        return ONOFF;
+    }
+
+    public void setONOFF(String ONOFF) {
+        this.ONOFF = ONOFF;
+    }
 
     public int getRecCommType() {
         return RecCommType;

@@ -91,13 +91,17 @@
                 android:layout_toRightOf="@+id/fly_num"
                 android:src="@drawable/img_jia_icon" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/img_position"
                 android:layout_width="100px"
                 android:layout_height="60px"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/img_position_icon" />
+                android:text="定位"
+                android:textSize="26px"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/shape_blue" />
         </com.zhy.autolayout.AutoRelativeLayout>
 
     </com.zhy.autolayout.AutoLinearLayout>

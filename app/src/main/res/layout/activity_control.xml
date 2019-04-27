@@ -76,8 +76,7 @@
                     android:id="@+id/lly_effect"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                   >
+                    android:orientation="vertical">
 
                     <com.mf.lightcontrol.widget.AutoRadioGroup
                         android:id="@+id/rg_body"
@@ -139,6 +138,7 @@
                             android:text="彩虹"
                             android:textColor="@color/selector_switch_color"
                             android:textSize="24px" />
+
                         <RadioButton
                             android:id="@+id/tv_quanguan"
                             android:layout_width="0dp"
@@ -267,6 +267,7 @@
 
 
                     </com.zhy.autolayout.AutoLinearLayout>
+
                     <com.zhy.autolayout.AutoLinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -298,16 +299,16 @@
                     </com.zhy.autolayout.AutoLinearLayout>
 
 
-
                 </com.zhy.autolayout.AutoLinearLayout>
 
                 <com.zhy.autolayout.AutoLinearLayout
                     android:id="@+id/lly_lenth"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-android:visibility="gone"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                >
 
 
                     <com.zhy.autolayout.AutoRelativeLayout
@@ -341,13 +342,18 @@ android:visibility="gone"
                             android:textColor="@color/colorWhite"
                             android:textSize="24px" />
 
-                        <ImageView
+                        <TextView
                             android:id="@+id/img_deng_xin_position"
                             android:layout_width="100px"
                             android:layout_height="60px"
                             android:layout_alignParentRight="true"
                             android:layout_marginLeft="53px"
-                            android:src="@drawable/img_position_icon" />
+                            android:text="设定"
+                            android:textSize="26px"
+                            android:gravity="center"
+                            android:textColor="@color/colorWhite"
+                            android:background="@drawable/shape_blue"
+                           />
 
                     </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -408,13 +414,17 @@ android:visibility="gone"
                             android:layout_toRightOf="@+id/fly_all"
                             android:src="@drawable/img_jia_icon" />
 
-                        <ImageView
+                        <TextView
                             android:id="@+id/img_ti_position"
                             android:layout_width="100px"
                             android:layout_height="60px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/img_position_icon" />
+                            android:text="设定"
+                            android:textSize="26px"
+                            android:gravity="center"
+                            android:textColor="@color/colorWhite"
+                            android:background="@drawable/shape_blue"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -459,13 +469,17 @@ android:visibility="gone"
                             android:textColor="@color/colorWhite"
                             android:textSize="24px" />
 
-                        <ImageView
+                        <TextView
                             android:id="@+id/img_gan_color_position"
                             android:layout_width="100px"
                             android:layout_height="60px"
                             android:layout_alignParentRight="true"
                             android:layout_marginLeft="53px"
-                            android:src="@drawable/img_position_icon" />
+                            android:text="设定"
+                            android:textSize="26px"
+                            android:gravity="center"
+                            android:textColor="@color/colorWhite"
+                            android:background="@drawable/shape_blue" />
 
                     </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -473,8 +487,8 @@ android:visibility="gone"
                         android:id="@+id/picker1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="33px"
                         android:layout_marginLeft="13px"
+                        android:layout_marginTop="33px"
                         android:layout_marginRight="13px"
                         android:background="#00ffffff"
                         app:indicatorColor="#ffffff"
@@ -536,12 +550,16 @@ android:visibility="gone"
                             android:layout_toRightOf="@+id/fly_pao"
                             android:src="@drawable/img_jia_icon" />
 
-                        <ImageView
+                        <TextView
                             android:id="@+id/img_gan_position"
                             android:layout_width="100px"
                             android:layout_height="60px"
                             android:layout_alignParentRight="true"
-                            android:src="@drawable/img_position_icon" />
+                            android:text="设定"
+                            android:textSize="26px"
+                            android:gravity="center"
+                            android:textColor="@color/colorWhite"
+                            android:background="@drawable/shape_blue" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -595,11 +613,11 @@ android:visibility="gone"
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/rc_body"
-                            android:scrollbars="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:scrollbarSize="2dp"
                             android:scrollbarThumbVertical="@color/colorWhite"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:scrollbars="vertical">
 
                         </android.support.v7.widget.RecyclerView>
 

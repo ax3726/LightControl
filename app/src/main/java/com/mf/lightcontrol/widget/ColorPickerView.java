@@ -31,9 +31,9 @@ import com.zhy.autolayout.utils.AutoUtils;
 public class ColorPickerView extends CircleImageView {
     Context context;
     private Bitmap iconBitMap;
-    float iconRadius;// 吸管圆的半径
-    float iconCenterX;
-    float iconCenterY;
+    float  iconRadius;// 吸管圆的半径
+    float  iconCenterX;
+    float  iconCenterY;
     PointF iconPoint;// 点击位置坐标
 
     public ColorPickerView(Context context) {
@@ -51,10 +51,10 @@ public class ColorPickerView extends CircleImageView {
         init();
     }
 
-    Paint mBitmapPaint;
+    Paint  mBitmapPaint;
     Bitmap imageBitmap;
-    float viewRadius;// 整个view半径
-    float radius;// 图片半径
+    float  viewRadius;// 整个view半径
+    float  radius;// 图片半径
 
     /**
      * 初始化画笔
@@ -101,10 +101,10 @@ public class ColorPickerView extends CircleImageView {
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
-        int pixel;
-        int r;
-        int g;
-        int b;
+        int   pixel;
+        int   r;
+        int   g;
+        int   b;
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
                 proofLeft(x, y);
@@ -199,8 +199,8 @@ public class ColorPickerView extends CircleImageView {
      */
     public void toColorPoint(String color_str) {
         color_str = color_str.replace("0x", "#");
-        int color_old = Color.parseColor(color_str);
-        Bitmap bitmap = imageBitmap;
+        int    color_old = Color.parseColor(color_str);
+        Bitmap bitmap    = imageBitmap;
 
         boolean bl = false;
         for (int i = 0; i < bitmap.getWidth(); i++) {
@@ -213,16 +213,16 @@ public class ColorPickerView extends CircleImageView {
 
 
                 if (color_old == color) {
-                    Point aPoint = new Point( bitmap.getWidth()/2, bitmap.getHeight()/2);
-                    Point bPoint = new Point( i,  j);
+                    Point aPoint = new Point(bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+                    Point bPoint = new Point(i, j);
 
-                    double x = Math.pow((aPoint.x - bPoint.x), 2);
-                    double y = Math.pow((aPoint.y - bPoint.y), 2);
+                    double x      = Math.pow((aPoint.x - bPoint.x), 2);
+                    double y      = Math.pow((aPoint.y - bPoint.y), 2);
                     double result = Math.sqrt(x + y);
-                    Log.e("lm","result"+result);
-                    int min= (int) (radius/2);
-                    int max= (int) (radius/5*4);
-                    if (result<max&&result>min) {
+                    Log.e("lm", "result" + result);
+                    int min = (int) (radius / 2);
+                    int max = (int) (radius / 5 * 4);
+                    if (result < max && result > min) {
                         iconPoint.x = i;
                         iconPoint.y = j;
                         invalidate();
@@ -256,23 +256,31 @@ public class ColorPickerView extends CircleImageView {
         Point aPoint = new Point((int) viewRadius, (int) viewRadius);
         Point bPoint = new Point((int) x, (int) y);
 
-        double i = Math.pow((aPoint.x - bPoint.x), 2);
-        double j = Math.pow((aPoint.y - bPoint.y), 2);
+        double i      = Math.pow((aPoint.x - bPoint.x), 2);
+        double j      = Math.pow((aPoint.y - bPoint.y), 2);
         double result = Math.sqrt(i + j);
 
         // 两点间距离公式
-        Log.e("lm","result"+result);
-        float min=radius/3+20;
-        if (result <= min||result>=viewRadius-10) {
+        Log.e("lm", "result" + result);
+        float min = radius / 3 + 20;
+
+        //内圈注释版本
+      /*  if (result <= min||result>=viewRadius-10) {
+
+        } else {
+     iconPoint.x = x;
+        iconPoint.y = y;
+        isMove = true;
+        }*/
+
+
+        if (result >= viewRadius - 10) {
 
         } else {
             iconPoint.x = x;
             iconPoint.y = y;
             isMove = true;
         }
-
-
-
 
 
     }

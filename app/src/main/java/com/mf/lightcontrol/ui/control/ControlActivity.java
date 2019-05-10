@@ -40,7 +40,7 @@ import java.util.List;
 
 public class ControlActivity extends BaseActivity<BasePresenter, ActivityControlBinding> {
 
-    private boolean mIsSwitch = false;
+    private boolean mIsSwitch = true;
     private boolean mIsFirst = false;
     private List<SensorModel> mDataList = new ArrayList<>();
     private CommonAdapter<SensorModel> mAdapter;
@@ -529,9 +529,11 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
         DeviceMessageModel model = (DeviceMessageModel) getIntent().getSerializableExtra("data");
         mName = getIntent().getStringExtra("name");
-
+//        PhoneClient.getIntance().setSendIP("192.168.1.102");
         setImgState(true);
         load(model);
+
+
     }
 
     private void load(DeviceMessageModel model) {
@@ -564,8 +566,10 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         setPickerState("SolidColor".equals(mTransDirDetecColor));
 //        mPutOutMin = model.getAtuoOffTime();
 //        mBinding.tvTime.setText(mPutOutMin == 0 ? "不熄灭" : mPutOutMin + "分钟");
-        mIsSwitch = "Power".equals(model.getONOFF());
-        updateSwicth(mIsSwitch, false, true);
+
+        //  开关注释
+      //  mIsSwitch = "Power".equals(model.getONOFF());
+      //  updateSwicth(mIsSwitch, false, true);
 
         List<List<Integer>> irMapping = model.getIRMapping();
         if (irMapping != null) {

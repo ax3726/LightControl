@@ -541,7 +541,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
         mLum = model.getLum();
         mSpeed = model.getSpeed();
-        mColor=model.getColor()+"";
+        mColor=model.getColor();
         mBinding.seekArc.setProgress(model.getLum());
         mBinding.sbSpeed.setProgress(model.getSpeed());
         mBinding.sbLenth.setProgress(model.getRunLenth());

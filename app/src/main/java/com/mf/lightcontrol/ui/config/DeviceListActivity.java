@@ -14,6 +14,7 @@ import com.lm.lib_common.base.BaseActivity;
 import com.lm.lib_common.base.BasePresenter;
 import com.lm.lib_common.utils.AppUtils;
 import com.lm.lib_common.utils.ParseJsonUtils;
+import com.lm.lib_common.utils.Utils;
 import com.mf.lightcontrol.R;
 import com.mf.lightcontrol.common.ClearEventModel;
 import com.mf.lightcontrol.common.PhoneClient;
@@ -90,12 +91,13 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         PhoneClient.getIntance().init();//初始化UDP通讯
         PhoneClient.getIntance().setSearchListener(new PhoneClient.SearchListener() {
             @Override
-            public void onDevice(String ip, String name, String state) {
+            public void onDevice(String ip, String name, String state, String version) {
                 Message message = new Message();
-                message.obj = new DeviceModel(name, ip, state);
+                message.obj = new DeviceModel(name, ip, state,version);
                 message.what = 0;
                 mHandler.sendMessage(message);
             }
+
 
 
         });
@@ -137,6 +139,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
 
                 ItemDeviceListBinding binding = holder.getBinding(ItemDeviceListBinding.class);
 
+                binding.tvVerSion.setText(TextUtils.isEmpty(item.getVersion())?"设备版本：1.0":"设备版本："+item.getVersion());
                 binding.imgState.setSelected("Power".equals(item.getState()));
                 binding.imgOff.setSelected("Power".equals(item.getState()));
                 binding.imgOff.setOnClickListener(new View.OnClickListener() {
@@ -208,6 +211,9 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         mBinding.srlBody.setEnableRefresh(false);
         mBinding.srlBody.setEnableLoadmore(false);
         mAdapter.setEmptyView(R.layout.empty_control_hint_layout, "正在搜索附近的设备...\n您可点击下方按钮添加设备!");
+        String versionName = Utils.getVersionName(aty);
+        mBinding.tvVerName.setText("版本号 "+versionName);
+
     }
 
     @Override

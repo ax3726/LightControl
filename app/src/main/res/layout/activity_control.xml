@@ -91,7 +91,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:button="@null"
-                            android:checked="true"
                             android:drawableTop="@drawable/selector_liuxing"
                             android:drawablePadding="14px"
                             android:gravity="center_horizontal"

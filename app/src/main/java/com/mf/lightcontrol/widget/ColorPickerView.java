@@ -198,7 +198,13 @@ public class ColorPickerView extends CircleImageView {
      * @param color_str
      */
     public void toColorPoint(String color_str) {
-        color_str = color_str.replace("0x", "#");
+        if (color_str.contains("0x")) {
+            color_str = color_str.replace("0x", "#");
+        } else {
+            color_str = "#"+color_str;
+        }
+
+
         int    color_old = Color.parseColor(color_str);
         Bitmap bitmap    = imageBitmap;
 

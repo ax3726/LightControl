@@ -211,7 +211,7 @@ public class PhoneClient {
                                 mUdpListener.onSetting();
                         } else if (receiverModel.getRecCommType() == 1) {//搜索设备应答
                             if (mSearchListener != null)
-                                mSearchListener.onDevice(packet.getAddress().getHostAddress(), receiverModel.getProduct(),receiverModel.getTotalONOFFStatus());
+                                mSearchListener.onDevice(packet.getAddress().getHostAddress(), receiverModel.getProduct(),receiverModel.getTotalONOFFStatus(),receiverModel.getVer());
                         } else if (receiverModel.getRecCommType() == 3) {//设置红外传感器映射参数
                             if (mUdpListener != null)
                                 mUdpListener.onRed();
@@ -281,7 +281,7 @@ public class PhoneClient {
     }
 
     public interface SearchListener {
-        void onDevice(String ip, String name,String state);
+        void onDevice(String ip, String name,String state,String version);
     }
 
     public interface DeviceListener {

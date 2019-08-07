@@ -10,7 +10,9 @@
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/srl_body"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -44,6 +46,16 @@
 
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
+
+        <TextView
+            android:id="@+id/tv_ver_name"
+            android:layout_width="wrap_content"
+            android:text="版本号 1.0"
+            android:textColor="@color/colorWhite"
+            android:textSize="30px"
+            android:layout_marginBottom="20px"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content" />
 
     </com.zhy.autolayout.AutoLinearLayout>
 </layout>

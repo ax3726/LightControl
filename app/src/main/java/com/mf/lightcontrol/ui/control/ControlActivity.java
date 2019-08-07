@@ -115,12 +115,6 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
         });
 
 
-        if (TextUtils.isEmpty(mColor)) {
-            //  mBinding.imgSwitchBg.getColor();
-        } else {
-            mBinding.imgSwitchBg.toColorPoint(mColor);
-        }
-
         initTextSwitch();
         mBinding.rgBody.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -537,8 +531,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     }
 
     private void load(DeviceMessageModel model) {
-
-
+//        mBinding.imgSwitchBg.toColorPoint("0059740");
         if (model == null) {
             return;
         }
@@ -548,9 +541,11 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
         mLum = model.getLum();
         mSpeed = model.getSpeed();
-
+        mColor=model.getColor()+"";
         mBinding.seekArc.setProgress(model.getLum());
         mBinding.sbSpeed.setProgress(model.getSpeed());
+        mBinding.sbLenth.setProgress(model.getRunLenth());
+
 
         mRunLenthPram = model.getRunLenth();
         mDetecStopTime = model.getDetecStopTime();
@@ -569,7 +564,14 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
 
         //  开关注释
       //  mIsSwitch = "Power".equals(model.getONOFF());
-      //  updateSwicth(mIsSwitch, false, true);
+        updateSwicth(mIsSwitch, false, true);
+
+        if (TextUtils.isEmpty(mColor)) {
+            //  mBinding.imgSwitchBg.getColor();
+        } else {
+            mBinding.imgSwitchBg.toColorPoint(mColor);
+        }
+
 
         List<List<Integer>> irMapping = model.getIRMapping();
         if (irMapping != null) {

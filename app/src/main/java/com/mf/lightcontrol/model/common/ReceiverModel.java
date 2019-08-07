@@ -16,6 +16,15 @@ public class ReceiverModel {
     private String MACADD;
     private String SN;
     private String TotalONOFFStatus;
+    private String Ver;
+
+    public String getVer() {
+        return Ver;
+    }
+
+    public void setVer(String Ver) {
+        this.Ver = Ver;
+    }
 
     public String getTotalONOFFStatus() {
         return TotalONOFFStatus;

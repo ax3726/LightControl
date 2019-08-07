@@ -4,13 +4,23 @@ public class DeviceModel {
     private String name;
     private String ip;
     private String state;
+    private String version;
 
 
 
-    public DeviceModel(String name, String ip, String state) {
+    public DeviceModel(String name, String ip, String state, String version) {
         this.name = name;
         this.ip = ip;
         this.state = state;
+        this.version = version;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public String getState() {

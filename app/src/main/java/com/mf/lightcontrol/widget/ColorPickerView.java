@@ -228,7 +228,14 @@ public class ColorPickerView extends CircleImageView {
                     Log.e("lm", "result" + result);
                     int min = (int) (radius / 2);
                     int max = (int) (radius / 5 * 4);
-                    if (result < max && result > min) {
+                   /* if (result < max && result > min) {
+                        iconPoint.x = i;
+                        iconPoint.y = j;
+                        invalidate();
+                        bl = true;
+                        break;
+                    }*/
+                    if (result < max ) {
                         iconPoint.x = i;
                         iconPoint.y = j;
                         invalidate();

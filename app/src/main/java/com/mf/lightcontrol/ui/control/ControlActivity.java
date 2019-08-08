@@ -531,7 +531,7 @@ public class ControlActivity extends BaseActivity<BasePresenter, ActivityControl
     }
 
     private void load(DeviceMessageModel model) {
-//        mBinding.imgSwitchBg.toColorPoint("0059740");
+//        mBinding.imgSwitchBg.toColorPoint("ffffff");
         if (model == null) {
             return;
         }

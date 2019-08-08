@@ -139,7 +139,7 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
 
                 ItemDeviceListBinding binding = holder.getBinding(ItemDeviceListBinding.class);
 
-                binding.tvVerSion.setText(TextUtils.isEmpty(item.getVersion())?"设备版本：1.0":"设备版本："+item.getVersion());
+                binding.tvVerSion.setText(TextUtils.isEmpty(item.getVersion())?"VER:1.0":"VER:"+item.getVersion());
                 binding.imgState.setSelected("Power".equals(item.getState()));
                 binding.imgOff.setSelected("Power".equals(item.getState()));
                 binding.imgOff.setOnClickListener(new View.OnClickListener() {

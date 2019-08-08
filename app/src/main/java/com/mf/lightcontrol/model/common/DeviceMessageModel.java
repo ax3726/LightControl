@@ -31,7 +31,7 @@ public class DeviceMessageModel implements Serializable {
     private int TransAdvanceShow;
     private int DetecStopTime;
     private int Mode;
-    private int Color;
+    private String Color;
     private int Lum;
     private int Speed;
     private String ONOFF;
@@ -94,11 +94,11 @@ public class DeviceMessageModel implements Serializable {
         this.Mode = Mode;
     }
 
-    public int getColor() {
+    public String getColor() {
         return Color;
     }
 
-    public void setColor(int Color) {
+    public void setColor(String Color) {
         this.Color = Color;
     }
 

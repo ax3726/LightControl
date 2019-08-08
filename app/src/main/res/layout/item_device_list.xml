@@ -5,7 +5,6 @@
         android:id="@+id/rly_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color333333"
         android:paddingLeft="28px"
         android:paddingTop="30px"
         android:paddingRight="28px"

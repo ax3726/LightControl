@@ -37,7 +37,7 @@ import java.util.List;
 
 public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDeviceListBinding> {
 
-    private List<DeviceModel> mDataList = new ArrayList<>();
+    private List<DeviceModel>          mDataList = new ArrayList<>();
     private CommonAdapter<DeviceModel> mAdapter;
 
     @Override
@@ -93,11 +93,10 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
             @Override
             public void onDevice(String ip, String name, String state, String version) {
                 Message message = new Message();
-                message.obj = new DeviceModel(name, ip, state,version);
+                message.obj = new DeviceModel(name, ip, state, version);
                 message.what = 0;
                 mHandler.sendMessage(message);
             }
-
 
 
         });
@@ -138,8 +137,8 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
             protected void convert(ViewHolder holder, DeviceModel item, int position) {
 
                 ItemDeviceListBinding binding = holder.getBinding(ItemDeviceListBinding.class);
-
-                binding.tvVerSion.setText(TextUtils.isEmpty(item.getVersion())?"VER:1.0":"VER:"+item.getVersion());
+                binding.tvIp.setText(item.getIp());
+                binding.tvVerSion.setText(TextUtils.isEmpty(item.getVersion()) ? "VER:1.0" : "VER:" + item.getVersion());
                 binding.imgState.setSelected("Power".equals(item.getState()));
                 binding.imgOff.setSelected("Power".equals(item.getState()));
                 binding.imgOff.setOnClickListener(new View.OnClickListener() {
@@ -183,12 +182,15 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
                     @Override
                     public void onClick(View v) {
                         if (binding.imgOff.isSelected()) {
+                            PhoneClient.getIntance().stopSearch();
+                            mHandler.postDelayed(mRunnable,3000);
                             PhoneClient.getIntance().setSendIP(item.getIp());
                             PhoneClient.getIntance().send(ParseJsonUtils.getjsonStr(new LoadMessageModel()));
                             PhoneClient.getIntance().setDeviceListener(new PhoneClient.DeviceListener() {
                                 @Override
                                 public void onDevice(DeviceMessageModel model) {
                                     mHandler.sendEmptyMessage(1);
+                                    mHandler.removeCallbacks(mRunnable);
                                     startActivity(new Intent(aty, ControlActivity.class)
                                             .putExtra("data", model)
                                             .putExtra("name", item.getName()));
@@ -212,9 +214,15 @@ public class DeviceListActivity extends BaseActivity<BasePresenter, ActivityDevi
         mBinding.srlBody.setEnableLoadmore(false);
         mAdapter.setEmptyView(R.layout.empty_control_hint_layout, "正在搜索附近的设备...\n您可点击下方按钮添加设备!");
         String versionName = Utils.getVersionName(aty);
-        mBinding.tvVerName.setText("版本号 "+versionName);
+        mBinding.tvVerName.setText("版本号 " + versionName);
 
     }
+  private  Runnable mRunnable= new Runnable() {
+        @Override
+        public void run() {
+            PhoneClient.getIntance().startSearch();
+        }
+    };
 
     @Override
     protected void initEvent() {
